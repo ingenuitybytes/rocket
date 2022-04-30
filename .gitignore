@@ -8,6 +8,9 @@ desktop.ini
 .Trashes
 ._*
 
+# Custom
+/build
+
 # Prerequisites
 *.d
 
