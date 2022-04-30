@@ -13,7 +13,7 @@ set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 pico_sdk_init()
 
 add_executable(main
-      main.c
+      main.cpp
       )
 
 # pull in common dependencies
