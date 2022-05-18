@@ -9,7 +9,7 @@ desktop.ini
 ._*
 
 # Custom
-/build
+*/build
 
 # Prerequisites
 *.d
