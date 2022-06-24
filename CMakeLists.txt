@@ -15,7 +15,7 @@ add_executable(main
       )
 
 # pull in common dependencies
-target_link_libraries(main pico_stdlib hardware_spi harware_i2c )
+target_link_libraries(main pico_stdlib hardware_spi hardware_i2c FATFs_SPI RF24)
 
 
 # enable usb output, disable uart output

@@ -10,11 +10,16 @@
  * This example was written to be used on 2 devices acting as "nodes".
  * Use the Serial Terminal to change each node's behavior.
  */
+
+/* Example Code
+
 #include "pico/stdlib.h"  // printf(), sleep_ms(), getchar_timeout_us(), to_us_since_boot(), get_absolute_time()
 #include "pico/bootrom.h" // reset_usb_boot()
 #include <tusb.h>         // tud_cdc_connected()
 #include <RF24.h>         // RF24 radio object
 #include "defaultPins.h"  // board presumptive default pin numbers for CE_PIN and CSN_PIN
+
+
 
 // instantiate an object for the nRF24L01 transceiver
 RF24 radio(CE_PIN, CSN_PIN);
@@ -167,3 +172,4 @@ int main()
     return 0; // we will never reach this
 }
 
+*/

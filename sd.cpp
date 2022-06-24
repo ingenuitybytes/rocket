@@ -1,3 +1,4 @@
+/* Example Code
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "sd_card.h"
@@ -95,3 +96,5 @@ int main() {
         sleep_ms(1000);
     }
 }
+
+*/
