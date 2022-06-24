@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include "pico/stdlib.h"
 
@@ -12,15 +12,17 @@ STOP: write Data to SD-Card when Stop Tracking-Command is received
 //Sensor Read Rate = 100Hz
 
 //enum state {IDLE, Tracking, STOP};
-
+*/
 
 using namespace std;
 
 int main() {
     stdio_init_all();
 
-    
+    printf("Hello");
 
+    
+    /*
     sensor_data = bmp_data & mpu_data
 
     IDLE
@@ -42,7 +44,7 @@ int main() {
         rf_send("Tracking stopped")
     
 
+    */
     return 0;
 }
-*/
 
