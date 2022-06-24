@@ -15,12 +15,8 @@ add_executable(main
       )
 
 # pull in common dependencies
-target_link_libraries(main pico_stdlib)
+target_link_libraries(main pico_stdlib hardware_spi harware_i2c )
 
-add_subdirectory(bmp280)
-add_subdirectory(mpu6050)
-add_subdirectory(rf24)
-add_subdirectory(sd)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(main 1)
@@ -28,3 +24,5 @@ pico_enable_stdio_uart(main 0)
 
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(main)
+
+
