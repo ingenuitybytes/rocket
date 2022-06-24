@@ -17,6 +17,11 @@ add_executable(main
 # pull in common dependencies
 target_link_libraries(main pico_stdlib)
 
+add_subdirectory(bmp280)
+add_subdirectory(mpu6050)
+add_subdirectory(rf24)
+add_subdirectory(sd)
+
 # enable usb output, disable uart output
 pico_enable_stdio_usb(main 1)
 pico_enable_stdio_uart(main 0)
