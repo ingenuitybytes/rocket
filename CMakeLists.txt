@@ -20,7 +20,8 @@ add_subdirectory(lib/RF24)
 
 
 # pull in common dependencies
-target_link_libraries(main 
+target_link_libraries(
+      main 
       pico_stdlib
       hardware_spi
       hardware_i2c
