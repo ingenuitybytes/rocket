@@ -14,8 +14,18 @@ add_executable(main
       main.cpp
       )
 
+# Tell CMake where to find other source code
+add_subdirectory(lib/SD/FatFs_SPI build)
+add_subdirectory(lib/RF24)
+
+
 # pull in common dependencies
-target_link_libraries(main pico_stdlib hardware_spi hardware_i2c FATFs_SPI RF24)
+target_link_libraries(main 
+      pico_stdlib
+      hardware_spi
+      hardware_i2c
+      FatFs_SPI
+      RF24)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(main 1)
