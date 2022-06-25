@@ -1,2 +1,4 @@
 FROM alpine:latest
-COPY . /pico
+RUN mkdir /pico
+WORKDIR /pico
+COPY . .
