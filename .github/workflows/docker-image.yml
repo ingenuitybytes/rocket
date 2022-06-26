@@ -19,7 +19,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ghcr.io/tutu-inc/rocket:$(date +%s)
+          images: ghcr.io/tutu-inc/rocket
           tag-sha: true
           tag-edge: false
           tag-latest: true
