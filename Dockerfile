@@ -1,3 +1,3 @@
-FROM alpine:armv7-v2.6.0
+FROM alpine
 RUN mkdir /pico
 COPY . /pico
