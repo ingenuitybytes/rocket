@@ -1,4 +1,4 @@
-FROM alpine
+FROM ubuntu
 RUN mkdir /pico
 COPY . /pico
 RUN apt install wget
