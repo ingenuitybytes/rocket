@@ -1,3 +1,3 @@
-FROM ubuntu:latest
-RUN mkdir /pico
-COPY . /pico
+FROM alpine:latest
+# RUN mkdir /pico
+# COPY . /pico
