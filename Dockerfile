@@ -1,4 +1,4 @@
 FROM alpine
 RUN mkdir /pico
-COPY . /pico
+COPY . /pico/.
 CMD [ "echo", "Hello World!" ]
