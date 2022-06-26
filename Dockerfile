@@ -1,4 +1,4 @@
-FROM alpine
+FROM ubuntu
 ENV DEBIAN_FRONTEND=noninteractive
 # RUN mkdir /pico
 # COPY . /pico
