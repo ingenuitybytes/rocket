@@ -4,6 +4,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # COPY . /pico
 RUN apt update && apt install -y wget
 RUN ["wget", "https://github.com/ocaml/opam/releases/download/2.0.6/opam-2.0.6-x86_64-linux"]
-RUN sh /pico/pico.sh
+RUN ["sh", "/pico/pico.sh"]
 COPY . /pico
 # RUN reboot
