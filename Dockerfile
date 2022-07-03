@@ -2,9 +2,16 @@ FROM ubuntu
 ENV DEBIAN_FRONTEND=noninteractive
 # RUN mkdir /pico
 # COPY . /pico
-RUN apt update && apt install -y wget
-RUN ["wget", "https://raw.githubusercontent.com/raspberrypi/pico-setup/master/pico_setup.sh"]
-RUN chmod 777 pico_setup.sh
-# RUN ./pico_setup.sh
-# COPY . /pico
+RUN apt update && apt install -y git && apt install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+
+RUN cd /
+RUN mkdir pico
+RUN cd pico
+RUN git clone -b master https://github.com/raspberrypi/pico-sdk.git
+RUN cd pico-sdk
+RUN git submodule update --init
+RUN cd ..
+RUN git clone -b master https://github.com/raspberrypi/pico-examples.git
+
+COPY . /pico
 # RUN reboot
