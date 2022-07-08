@@ -20,8 +20,8 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: ghcr.io/tutu-inc/rocket
-          latest: true
           tag-custom: latest
+          tag-sha: true
           tag-semver: |
             {{raw}}
           
