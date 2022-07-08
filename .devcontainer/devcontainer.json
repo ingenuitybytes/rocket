@@ -1,6 +1,6 @@
 //devcontainer.json
 {
-   "name": "Container",
+   "name": "VSCode Setup",
    "dockerFile": "../Dockerfile",
  
    "customizations": {
