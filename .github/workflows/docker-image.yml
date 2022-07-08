@@ -23,6 +23,7 @@ jobs:
           tag-sha: true
           tag-edge: false
           tag-latest: true
+          tag-release: true
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
