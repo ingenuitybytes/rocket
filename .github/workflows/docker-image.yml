@@ -20,14 +20,10 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: ghcr.io/tutu-inc/rocket
-          flavor: latest=true
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-          # tag-sha: true
-          # tag-edge: false
-          # tag-latest: true
+          latest: true
+          tag-custom: latest
+          tag-semver: |
+            {{raw}}
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -47,6 +43,6 @@ jobs:
         with:
           # platform: linux/amd64, linux/arm64
           file: ./Dockerfile
-          push: ${{ github.ref_type == 'tag' }}
+          push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
