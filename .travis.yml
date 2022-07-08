@@ -1,2 +1,4 @@
 language: C++
 compiler: gcc
+script:
+- main.cpp
