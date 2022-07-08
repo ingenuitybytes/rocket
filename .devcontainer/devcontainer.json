@@ -1,0 +1,17 @@
+//devcontainer.json
+{
+   "name": "Container",
+   "dockerFile": "../Dockerfile",
+ 
+   "customizations": {
+     "vscode": {
+         "settings": {
+         // --
+         },
+      "extensions": [
+		"twxs.cmake",
+		"ms-vscode.cmake-tools"
+	   ]
+     }
+   }
+ }
