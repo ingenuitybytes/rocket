@@ -25,9 +25,9 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
-          tag-sha: true
-          tag-edge: false
-          tag-latest: true
+          # tag-sha: true
+          # tag-edge: false
+          # tag-latest: true
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
