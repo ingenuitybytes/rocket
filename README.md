@@ -1,2 +1,2 @@
 # Rocket
-hi
+https://img.shields.io/github/license/tutu-inc/rocket
