@@ -22,14 +22,9 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tag-sha: true
           # tag-latest: true
-          tag-latest: ${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
         
-      - if: github.ref == 'refs/heads/master'
-        run: |
-          skopeo copy docker://docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:master \
-            docker://docker.io/${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          skopeo copy docker://ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:master \
-            docker://ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
