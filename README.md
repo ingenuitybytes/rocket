@@ -1,4 +1,7 @@
 # Rocket
+
+![example workflow](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILE>/badge.svg)
+
 ![GitHub](https://img.shields.io/github/license/tutu-inc/rocket)
 ![GitHub issues](https://img.shields.io/github/issues/tutu-inc/rocket)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tutu-inc/rocket)
