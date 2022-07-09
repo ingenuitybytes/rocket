@@ -21,14 +21,15 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v4
         with:
+          tag-name: latest
           tag-flavor: latest
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=schedule,pattern=nightly
             type=schedule,pattern={{date 'YYYYMMDD'}}
             type=ref,event=pr
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
             type=sha,enable=${{ github.event_name == 'push' }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
             
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
