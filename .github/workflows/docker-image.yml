@@ -25,7 +25,7 @@ jobs:
             type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'master') }}
             type=ref,event=tag
           flavor: |
-            latest=false
+            latest=true
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
