@@ -21,9 +21,9 @@ jobs:
         with:
           images: ghcr.io/tutu-inc/rocket
           tag-custom: latest
-          # tag-sha: true
-          tag-semver: |
-            {{raw}}
+          tag-sha: true
+          # tag-semver: |
+          #   {{raw}}
           
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
