@@ -8,4 +8,3 @@ RUN cd pico && git clone -b master https://github.com/raspberrypi/pico-sdk.git
 RUN export PICO_SDK_PATH=/pico/pico-sdk
 # RUN git submodules init
 COPY . /pico
-# RUN reboot
