@@ -19,9 +19,9 @@ jobs:
         with:
           fetch-depth: 0
         
-      #- name: Semantic versioning
-      #  id: versioning
-      - uses: paulhatch/semantic-version@v4.0.2
+      - name: Semantic versioning
+        id: versioning
+        uses: paulhatch/semantic-version@v5.0.0-alpha2
         with:
           branch: master
           tag_prefix: "v"
@@ -62,7 +62,7 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.paulhatch/semantic-version.outputs.version }}
+          tags: ${{ steps.docker_meta.outputs.tags && steps.versioning.outputs.version }}
           labels: ${{ steps.docker_meta.outputs.labels }} 
           
       #- name: Create Release
