@@ -5,8 +5,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  schedule:
-    - cron: 0 0 * * *
+  #schedule:
+  #  - cron: 0 0 * * *
 
 jobs:
   build:
@@ -25,11 +25,21 @@ jobs:
             latest=auto
           images: ghcr.io/tutu-inc/rocket
           tags: |
-            type=schedule,pattern=nightly
-            type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
             type=ref,event=pr
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
-            type=sha,enable=${{ github.event_name == 'push' }}
+            type=sha
+          
+          
+          #tags: |
+          #  type=schedule,pattern=nightly
+          #  type=schedule,pattern={{date 'YYYYMMDD'}}
+          #  type=ref,event=pr
+          #  type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
+          #  type=sha,enable=${{ github.event_name == 'push' }}
             
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -41,7 +51,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DOCKER_PACKAGE_TOKEN }}
-  
       - name: Build and Push image
         uses: docker/build-push-action@v2
         with:
