@@ -28,6 +28,7 @@ jobs:
           major_pattern: "BREAKING CHANGE:"
           minor_pattern: "FEATURE:"
           format: "v${major}.${minor}.${patch}-alpha${increment}"
+          short_tags: true
           
         
       - name: Docker meta
