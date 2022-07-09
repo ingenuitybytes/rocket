@@ -21,6 +21,7 @@ jobs:
         id: docker_meta
         uses: docker/metadata-action@v4
         with:
+          tag-flavor: latest
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=schedule,pattern=nightly
