@@ -17,15 +17,15 @@ jobs:
       - name: Check out
         uses: actions/checkout@v2
         
-      - name: Semantic versioning
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          branch: master
-          tag-prefix: "v"
-          major-pattern: "BREAKING CHANGE:"
-          minor-pattern: "FEATURE:"
-          format: "v${major}.${minor}.${patch}-alpha${increment}"
+      #- name: Semantic versioning
+      #  id: versioning
+      #  uses: paulhatch/semantic-version@v4.0.2
+      #  with:
+      #    branch: master
+      #    tag-prefix: "v"
+      #    major-pattern: "BREAKING CHANGE:"
+      #    minor-pattern: "FEATURE:"
+       #   format: "v${major}.${minor}.${patch}-alpha${increment}"
           
         
       - name: Docker meta
@@ -35,7 +35,7 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=sha
-            type=semver,pattern={{version}},value=v0.1.0-alpha.1
+          #  type=semver,pattern={{version}},value=v0.1.0-alpha.1
           
           #tags: |
           #  type=schedule,pattern=nightly
@@ -61,19 +61,17 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-          tags: ${{steps.versioning.outputs.version }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           
-        # steps.docker_meta.outputs.tags &&   
+        # && steps.versioning.outputs.version 
           
-      - name: Create Release
-        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: ${{ steps.versioning.outputs.version }}
-          release_name: ${{ steps.versioning.outputs.version }}
-          prerelease: true
-      
-      
+      #- name: Create Release
+      #  if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      #  uses: actions/create-release@v1
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      #  with:
+      #    tag_name: ${{ steps.versioning.outputs.version }}
+      #    release_name: ${{ steps.versioning.outputs.version }}
+      #    prerelease: true
