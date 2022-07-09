@@ -26,7 +26,7 @@ jobs:
           tag_prefix: "v"
           major_pattern: "BREAKING CHANGE:"
           minor_pattern: "FEATURE:"
-          format: "v${major}.${minor}.${patch}-alpha${increment}"         
+          version_format: "v${major}.${minor}.${patch}-alpha${increment}"         
         
       - name: Docker meta
         id: docker_meta
