@@ -70,6 +70,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ steps.versioning.outputs.version }}
-          release_name: ${{ steps.versioning.outputs.version }}
+          tag_name: ${{ steps.versioning.outputs.tag }}
+          release_name: ${{ steps.versioning.outputs.tag }}
           prerelease: true
