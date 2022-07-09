@@ -61,7 +61,7 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-          tags: tutu-inc/rocket:${{ steps.versioning.outputs.version }}
+          tags: ${{ tutu-inc/rocket}}:${{ steps.versioning.outputs.version }}
           # labels: ${{ steps.docker_meta.outputs.labels }} 
           
       #- name: Create Release
