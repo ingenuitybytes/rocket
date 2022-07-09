@@ -24,9 +24,9 @@ jobs:
         uses: paulhatch/semantic-version@v4.0.2
         with:
           branch: master
-          tag-prefix: "v"
-          major-pattern: "BREAKING CHANGE:"
-          minor-pattern: "FEATURE:"
+          tag_prefix: "v"
+          major_pattern: "BREAKING CHANGE:"
+          minor_pattern: "FEATURE:"
           format: "v${major}.${minor}.${patch}-alpha${increment}"
           
         
@@ -63,7 +63,7 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.versioning.outputs.version }}
+          tags: ${{ steps.docker_meta.outputs.tags && steps.versioning.outputs.version }}
           labels: ${{ steps.docker_meta.outputs.labels }} 
           
       #- name: Create Release
