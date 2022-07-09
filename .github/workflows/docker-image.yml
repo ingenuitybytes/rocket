@@ -21,6 +21,7 @@ jobs:
         with:
           images: ghcr.io/tutu-inc/rocket
           tag-custom: latest
+          tag-latest: false
           tag-sha: true
           # tag-semver: |
           #   {{raw}}
