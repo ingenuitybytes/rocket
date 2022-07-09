@@ -63,7 +63,7 @@ jobs:
         with:
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.docker_meta.outputs.tags && steps.versioning.outputs.version }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }} 
           
       #- name: Create Release
