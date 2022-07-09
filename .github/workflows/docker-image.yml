@@ -22,7 +22,7 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tag-sha: true
           # tag-latest: true
-          # tag-latest: ${{ github.ref == 'refs/heads/master' }}
+          tag-latest: ${{ github.ref == 'refs/heads/master' }}
         
       - if: github.ref == 'refs/heads/master'
         run: |
