@@ -2,8 +2,8 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    #branches: 
-    #  - 'master'
+    branches: 
+      - 'master'
     tags:
       - 'v*'
   pull_request:
@@ -27,7 +27,6 @@ jobs:
           tags: |
             type=raw,value=latest
             type=semver,pattern={{raw}}
-# type=sha
             
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
