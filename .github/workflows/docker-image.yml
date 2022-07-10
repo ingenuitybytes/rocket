@@ -1,6 +1,5 @@
 name: Build and Publish Docker Image
 
-
 on:
   push:
     #branches: 
@@ -50,11 +49,3 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }} 
           
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: "v0.1.0-alpha"
-          release_name: "v0.1.0-alpha"
-          prerelease: false
