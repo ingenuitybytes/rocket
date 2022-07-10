@@ -14,14 +14,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
         
-      - name: Docker meta
-        id: docker_meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/tutu-inc/rocket
-          tags: |
-            type=semver,pattern={{version}}
-        
       - name: Create Release
         uses: actions/create-release@v1
         env:
