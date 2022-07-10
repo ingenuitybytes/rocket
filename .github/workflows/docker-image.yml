@@ -31,7 +31,7 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=sha
-            type=semver,pattern={{version}},value=v${{ steps.bump_version.outputs.next-version }}
+            type=semver,pattern={{version}},value="v${{ steps.bump_version.outputs.next-version }}""
             type=raw,value=latest
           
           #tags: |
