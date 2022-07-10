@@ -24,7 +24,6 @@ jobs:
           current-version: '2.11.7-alpha3'
           version-fragment: 'feature'
 
-
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v4
