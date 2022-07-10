@@ -12,12 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     
-      steps:
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: "v0.1.0-alpha"
-          release_name: "v0.1.0-alpha"
-          prerelease: false
+    steps:
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        tag_name: "v0.1.0-alpha"
+        release_name: "v0.1.0-alpha"
+        prerelease: false
