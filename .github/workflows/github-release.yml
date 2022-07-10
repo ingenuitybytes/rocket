@@ -10,12 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        tag_name: "v0.1.0-beta"
-        release_name: "v0.1.0-beta"
+        tag_name: "v0.1.0-beta" # ${{ github.ref }}
+        release_name: "v0.1.0-beta" # Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
         prerelease: false
         
