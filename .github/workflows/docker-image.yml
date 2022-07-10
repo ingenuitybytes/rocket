@@ -29,6 +29,7 @@ jobs:
             type=semver,pattern={{version}}
             type=raw,value=latest
           
+          
           #tags: |
           #  type=schedule,pattern=nightly
           #  type=schedule,pattern={{date 'YYYYMMDD'}}
