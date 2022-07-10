@@ -2,13 +2,13 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    branches: [ "master" ]
+    branches: 
+      - 'master'
     tags:
       - 'v*'
   pull_request:
-    branches: [ "master" ]
-  #schedule:
-  #  - cron: 0 0 * * *
+    branches:
+      - 'master'
 
 jobs:
   build:
@@ -29,12 +29,6 @@ jobs:
             type=semver,pattern={{raw}}
 #,value=v0.1.0-alpha0
 #type=sha
-   
-          #tags: |
-          #  type=schedule,pattern=nightly
-          #  type=schedule,pattern={{date 'YYYYMMDD'}}
-          #  type=ref,event=pr
-          #  type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) || github.event_name == 'schedule' }}
             
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
