@@ -3,6 +3,8 @@ name: Build and Publish Docker Image
 on:
   push:
     branches: [ "master" ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ "master" ]
   #schedule:
@@ -17,13 +19,6 @@ jobs:
       - name: Check out
         uses: actions/checkout@v2
 
-      - name: Bump release version
-        id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: '0.1.0-alpha0'
-          version-fragment: 'alpha'
-
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v4
@@ -31,7 +26,7 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=sha
-            type=semver,pattern={{version}},value="v${{ steps.bump_version.outputs.next-version }}"
+            type=semver,pattern={{version}}
             type=raw,value=latest
           
           #tags: |
