@@ -25,10 +25,10 @@ jobs:
         with:
           images: ghcr.io/tutu-inc/rocket
           tags: |
-#type=sha
+            type=raw,value=latest
             type=semver,pattern={{version}}
 #,value=v0.1.0-alpha0
-            type=raw,value=latest
+#type=sha
    
           #tags: |
           #  type=schedule,pattern=nightly
