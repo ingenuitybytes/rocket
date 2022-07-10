@@ -27,6 +27,10 @@ jobs:
 
             ## What's Changed
             * updated project
+            
+            ##Contributers
+            * @AttractiveToad
+            * @nikplay12345
 
             **Full Changelog**: https://github.com/Tutu-Inc/Rocket/commits/${{ github.ref }}
           draft: false
