@@ -21,6 +21,8 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
+      - run: echo ${{ steps.get_version.outputs.version-without-v }}
+
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
