@@ -17,17 +17,11 @@ jobs:
       - name: Check out
         uses: actions/checkout@v2
 
-      - name: Get version
-        id: get_version
-        uses: battila7/get-version-action@v2
-
-      - run: echo ${{ steps.get_version.outputs.version-without-v }}
-
       - name: Bump release version
         id: bump_version
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
-          current-version: ${{ steps.get_version.outputs.version-without-v }}
+          current-version: ${{ github.event.package.version.tag }}
           version-fragment: 'alpha'
 
       - name: Docker meta
