@@ -20,6 +20,7 @@ jobs:
           fetch-depth: 0
         
       - name: Git Semantic Version
+        id: versioning
         uses: PaulHatch/semantic-version@v5.0.0-alpha2
         with:
           branch: master
@@ -70,6 +71,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ steps.versioning.outputs.tag_name }}
-          release_name: ${{ steps.versioning.outputs.tag_name }}
+          tag_name: ${{ steps.versioning.outputs.version }}
+          release_name: ${{ steps.versioning.outputs.version }}
           prerelease: true
