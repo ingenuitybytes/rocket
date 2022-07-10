@@ -14,11 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout
+      - name: Check out
         uses: actions/checkout@v2
 
     steps:
-      - id: get_version
+      - name: Get version
+        id: get_version
         uses: battila7/get-version-action@v2
 
       - name: Bump release version
