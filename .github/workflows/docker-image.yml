@@ -26,7 +26,7 @@ jobs:
           images: ghcr.io/tutu-inc/rocket
           tags: |
             type=raw,value=latest
-            type=semver,pattern={{version}}
+            type=semver,pattern={{raw}}
 #,value=v0.1.0-alpha0
 #type=sha
    
