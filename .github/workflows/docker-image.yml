@@ -27,7 +27,7 @@ jobs:
           tags: |
             type=raw,value=latest
             type=semver,pattern={{raw}}
-            type=sha
+# type=sha
             
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
