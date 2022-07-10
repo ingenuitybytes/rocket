@@ -1,29 +1,38 @@
-name: Build and Publish New Release
+name: New Github Release
 
 on:
   push:
     tags:
-      - v**
+      - 'v*'
 
 jobs:
   build:
+  
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      with:
-        tag_name: "v0.1.0-beta" # ${{ github.ref }}
-        release_name: "v0.1.0-beta" # Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-          - First Change
-          - Second Change
-        draft: false
-        prerelease: false
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ## Not Working!
+            * this version is not working
+
+            ## What's Changed
+            * updated project
+
+            ## Contributors
+            * @AttractiveToad 
+            * @nikplay12345
+
+            **Full Changelog**: https://github.com/Tutu-Inc/Rocket/commits/${{ github.ref }}
+          draft: false
+          prerelease: false
         
