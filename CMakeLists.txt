@@ -15,9 +15,7 @@ add_executable(main
       )
 
 # Tell CMake where to find other source code
-add_subdirectory(lib/SD/FatFs_SPI build)
-add_subdirectory(lib/RF24)
-
+add_subdirectory(lib)
 
 # pull in common dependencies
 target_link_libraries(
@@ -25,6 +23,7 @@ target_link_libraries(
       pico_stdlib
       hardware_spi
       hardware_i2c
+      BMP280
       FatFs_SPI
       RF24)
 
