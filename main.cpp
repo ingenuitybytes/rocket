@@ -1,10 +1,17 @@
 // Example Code
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "./lib/BMP280/bmp280.h"
+//#include "./lib/BMP280/bmp280.h"
 
 int main() {
     stdio_init_all();
+    while (true) {
+        printf("Hello, world!\n");
+        sleep_ms(1000);
+    }
+    return 0;
+}
+
 /*
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
     #warning i2c / bmp280_i2c example requires a board with I2C pins
@@ -46,9 +53,6 @@ int main() {
 
 #endif
 */
-printf("Hello World");
-    return 0;
-}
 
 
 
