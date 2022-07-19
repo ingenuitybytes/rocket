@@ -11,6 +11,7 @@
 #include "pico/stdlib.h"
 #include "./lib/MPU6050/mpu6050.h"
 
+
 int main() {
     stdio_init_all();
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
