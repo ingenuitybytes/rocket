@@ -98,3 +98,12 @@ int32_t bmp280_convert_temp(int32_t temp, struct bmp280_calib_param* params);
 int32_t bmp280_convert_pressure(int32_t pressure, int32_t temp, struct bmp280_calib_param* params);
 void bmp280_get_calib_params(struct bmp280_calib_param* params);
 
+class BMP280{
+    public:
+        struct bmp280_calib_param params;
+        int32_t temperature;
+        int32_t pressure;
+        bool init();
+        int32_t get_data();
+        void reset();
+};
