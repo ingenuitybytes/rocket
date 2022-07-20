@@ -35,9 +35,10 @@ target_link_libraries(main pico_stdlib
     hardware_spi
     hardware_i2c
     BMP280
-    MPU6050)
-#FatFs_SPI
-#RF24
+    MPU6050
+    FatFs_SPI
+    RF24
+    )
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(main 1)
