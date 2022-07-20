@@ -32,6 +32,7 @@ if (TARGET tinyusb_device)
 
 # pull in common dependencies
 target_link_libraries(main pico_stdlib
+    hardware_pwm
     hardware_spi
     hardware_i2c
     BMP280
