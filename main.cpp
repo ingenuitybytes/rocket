@@ -1,3 +1,38 @@
+
+/*
+Testing via Terminal & 2.4GHz
+1. Select Terminal or 2.4GHz
+2. Enter Module to Test
+3. End Test
+*/
+
+
+/**
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#include "pico/stdlib.h"
+
+int main() {
+    const uint GREEN = 14;
+    const uint RED = 15;
+    gpio_init(GREEN);
+    gpio_init(RED);
+    gpio_set_dir(GREEN, GPIO_OUT);
+    gpio_set_dir(RED, GPIO_OUT);
+    while (true) {
+        gpio_put(GREEN, 1);
+        gpio_put(RED, 0);
+        sleep_ms(500);
+        gpio_put(GREEN, 0);
+        gpio_put(RED, 1);
+        sleep_ms(500);
+    }
+}
+
+//RF24-Test
 /*
  * See documentation at https://nRF24.github.io/RF24
  * See License information at root directory of this library
@@ -168,8 +203,6 @@ int main()
     }
     return 0; // we will never reach this
 }
-
-
 */
 
 
@@ -177,12 +210,8 @@ int main()
 
 
 
-
-
-
-
-
-
+//SD-Test
+/*
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "sd_card.h"
@@ -281,7 +310,7 @@ int main() {
     }
 }
 
-
+*/
 
 
 
