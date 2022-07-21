@@ -103,7 +103,7 @@ class BMP280{
         struct bmp280_calib_param params;
         int32_t temperature;
         int32_t pressure;
-        bool init();
-        int32_t get_data();
+        void init();
+        void get_data();
         void reset();
 };

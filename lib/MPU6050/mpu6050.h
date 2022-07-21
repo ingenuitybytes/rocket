@@ -35,9 +35,9 @@ static int addr = 0x68;
 
 class MPU6050{
     public:
-        int16_t *temp;
-        int16_t gyro[3];
-        int16_t accel[3];
+        int16_t rawTemp;
+        int16_t rawGyro[3];
+        int16_t rawAccel[3];
         void reset();
         void readTempRaw();
         void readGyroRaw();

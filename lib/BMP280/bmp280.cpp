@@ -144,15 +144,15 @@ void bmp280_get_calib_params(struct bmp280_calib_param* params) {
 }
 
 
-bool BMP280::init(){
+void BMP280::init(){
     // configure BMP280
     bmp280_init();
 
     // retrieve fixed compensation params
-    //bmp280_get_calib_params(&params);
+    bmp280_get_calib_params(&params);
 }
 
-int32_t BMP280::get_data(){
+void BMP280::get_data(){
     int32_t raw_temperature;
     int32_t raw_pressure;
     bmp280_read_raw(&raw_temperature, &raw_pressure);

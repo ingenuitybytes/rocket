@@ -1,50 +1,66 @@
+/*
 #include <stdio.h>
 
 #include "./lib/BMP280/bmp280.h"
 #include "pico/binary_info.h"
 #include "pico/stdlib.h"
+#include "./src/bus_init.cpp"
 
 
 int main() {
     stdio_init_all();
 
-#if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
-    #warning i2c / bmp280_i2c example requires a board with I2C pins
-        puts("Default I2C pins were not defined");
-#else
-    // useful information for picotool
-    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
-    bi_decl(bi_program_description("BMP280 I2C example for the Raspberry Pi Pico"));
-
-    printf("Hello, BMP280! Reading temperaure and pressure values from sensor...\n");
-
-    // I2C is "open drain", pull ups to keep signal high when no data is being sent
-    i2c_init(i2c_default, 100 * 1000);
-    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
-    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
+    i2cInit();
 
     BMP280 bmp280;
-    bool success = bmp280.init();
-
-    /*
+    bmp280.init();
 
     for(int i = 0; i < 10; i++){
         bmp280.get_data();
-        printf("%d: %.3f", bmp280.temperature);
-        printf(" - %.3f", bmp280.pressure);
+        printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+        printf("Temp. = %.2f C\n", bmp280.temperature / 100.f);
         sleep_ms(500);
-    }
-    */
-#endif
-
-    while(1){
-        printf("Hello World!");
     }
 
     return 0;
 }
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#include "pico/stdlib.h"
+#include "pico/binary_info.h"
+#include "hardware/i2c.h"
+#include "./lib/MPU6050/mpu6050.h"
+#include "./src/bus_init.cpp"
+
+int main() {
+
+    i2cInit();
+
+    MPU6050 mpu6050;
+    mpu6050.reset();
+
+    while (1) {
+        mpu6050.readTempRaw();
+        mpu6050.readGyroRaw();
+        mpu6050.readAccelRaw();
+
+        // Note this is chip temperature.
+        printf("Temp. = %f\n", (mpu6050.rawTemp / 340.0) + 36.53);
+        // These are the raw numbers from the chip, so will need tweaking to be really useful.
+        // See the datasheet for more information
+        printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
+        printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
+        // Temperature is simple so use the datasheet calculation to get deg C.
+
+        sleep_ms(250);
+    }
+
+    return 0;
+}
+
 
 
 
