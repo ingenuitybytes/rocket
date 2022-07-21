@@ -52,7 +52,7 @@ void MPU6050::readTempRaw() {
     i2c_write_blocking(i2c_default, addr, &val, 1, true);
     i2c_read_blocking(i2c_default, addr, buffer, 2, false);  // False - finished with bus
 
-    *temp = buffer[0] << 8 | buffer[1];
+    rawTemp = buffer[0] << 8 | buffer[1];
 }
 
 void MPU6050::readGyroRaw() {
@@ -69,7 +69,7 @@ void MPU6050::readGyroRaw() {
     i2c_read_blocking(i2c_default, addr, buffer, 6, false);  // False - finished with bus
 
     for (int i = 0; i < 3; i++) {
-        gyro[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);;
+        rawGyro[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);;
     }
 }
 
@@ -82,6 +82,6 @@ void MPU6050::readAccelRaw() {
     i2c_read_blocking(i2c_default, addr, buffer, 6, false);
 
     for (int i = 0; i < 3; i++) {
-        accel[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);
+        rawAccel[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);
     }
 }
