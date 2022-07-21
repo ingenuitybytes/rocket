@@ -1,41 +1,15 @@
-/*
-#include <stdio.h>
-
-#include "./lib/BMP280/bmp280.h"
-#include "pico/binary_info.h"
-#include "pico/stdlib.h"
-#include "./src/bus_init.cpp"
-
-
-int main() {
-    stdio_init_all();
-
-    i2cInit();
-
-    BMP280 bmp280;
-    bmp280.init();
-
-    for(int i = 0; i < 10; i++){
-        bmp280.get_data();
-        printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-        printf("Temp. = %.2f C\n", bmp280.temperature / 100.f);
-        sleep_ms(500);
-    }
-
-    return 0;
-}
-*/
-
-/*
 #include <stdio.h>
 #include <string.h>
 #include "pico/stdlib.h"
-#include "pico/binary_info.h"
 #include "hardware/i2c.h"
+#include "./lib/BMP280/bmp280.h"
 #include "./lib/MPU6050/mpu6050.h"
+#include "pico/binary_info.h"
 #include "./src/bus_init.cpp"
 
-int main() {
+
+/*
+int testMPU6050() {
 
     stdio_init_all();
     i2cInit();
@@ -43,25 +17,20 @@ int main() {
     MPU6050 mpu6050;
     mpu6050.reset();
 
-    while (1) {
-        mpu6050.readTempRaw();
-        mpu6050.readGyroRaw();
-        mpu6050.readAccelRaw();
+    mpu6050.readTempRaw();
+    mpu6050.readGyroRaw();
+    mpu6050.readAccelRaw();
 
-        // Note this is chip temperature.
-        printf("Temp. = %f\n", (mpu6050.rawTemp / 340.0) + 36.53);
-        // These are the raw numbers from the chip, so will need tweaking to be really useful.
-        // See the datasheet for more information
-        printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
-        printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
-        // Temperature is simple so use the datasheet calculation to get deg C.
-        sleep_ms(250);
-    }
+    // Note this is chip temperature.
+    printf("Temp. = %f\n", (mpu6050.rawTemp / 340.0) + 36.53);
+    // These are the raw numbers from the chip, so will need tweaking to be really useful.
+    // See the datasheet for more information
+    printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
+    printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
 
     return 0;
 }
 */
-
 
 
 /*
