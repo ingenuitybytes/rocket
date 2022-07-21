@@ -27,7 +27,7 @@ int main() {
     gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
 
     BMP280 bmp280;
-    bmp280.init();
+    bool success = bmp280.init();
 
     /*
 
