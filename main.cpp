@@ -1,10 +1,105 @@
+#include <stdio.h>
+
+#include "./lib/BMP280/bmp280.h"
+#include "pico/binary_info.h"
+#include "pico/stdlib.h"
+
+
+int main() {
+    stdio_init_all();
+
+
+#if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
+    #warning i2c / bmp280_i2c example requires a board with I2C pins
+        puts("Default I2C pins were not defined");
+#else
+    // useful information for picotool
+    bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
+    bi_decl(bi_program_description("BMP280 I2C example for the Raspberry Pi Pico"));
+
+    printf("Hello, BMP280! Reading temperaure and pressure values from sensor...\n");
+
+    // I2C is "open drain", pull ups to keep signal high when no data is being sent
+    i2c_init(i2c_default, 100 * 1000);
+    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(PICO_DEFAULT_I2C_SDA_PIN);
+    gpio_pull_up(PICO_DEFAULT_I2C_SCL_PIN);
+
+    BMP280 bmp280;
+    bool success = bmp280.init();
+
+    /*
+
+    for(int i = 0; i < 10; i++){
+        bmp280.get_data();
+        printf("%d: %.3f", bmp280.temperature);
+        printf(" - %.3f", bmp280.pressure);
+        sleep_ms(500);
+    }
+    */
+#endif
+
+    while(1){
+        printf("Hello World!");
+    }
+
+    return 0;
+}
+
+
+
+
+
 
 /*
-Testing via Terminal & 2.4GHz
-1. Select Terminal or 2.4GHz
+Testing via Serial Monitor & 2.4GHz
+1. Select Serial Monitor or 2.4GHz
 2. Enter Module to Test
-3. End Test
+
+Modules
+- Switch
+- Buttons 1&2
+- LEDs 1&2
+- Buzzer
+- Servo 1&2&3
+- BMP280
+- MPU 6050
+- SD
+- NRF24L01
+- Pyros 1&2
 */
+
+/*
+#include <stdio.h>
+#include "pico/stdlib.h"
+
+int main() {
+    char input;
+    bool mode;
+
+    stdio_init_all();
+
+    printf("Select between Serial or 2.4GHz communication");
+    input = getchar();
+    mode = input ? 0 : 1;
+
+        printf("Hello, world!\n");
+        sleep_ms(1000);
+
+    return 0;
+}
+
+*/
+
+
+
+
+
+
+
+
+
 
 
 /**
@@ -12,7 +107,7 @@ Testing via Terminal & 2.4GHz
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
+/*
 #include "pico/stdlib.h"
 
 int main() {
@@ -31,6 +126,7 @@ int main() {
         sleep_ms(500);
     }
 }
+*/
 
 //RF24-Test
 /*
