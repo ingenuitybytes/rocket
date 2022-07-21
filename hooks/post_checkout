@@ -1,0 +1,3 @@
+#!/bin/bash
+cd pico/pico-sdk
+git submodule update --init
