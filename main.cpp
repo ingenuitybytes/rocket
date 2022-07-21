@@ -8,7 +8,6 @@
 int main() {
     stdio_init_all();
 
-
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN) || !defined(PICO_DEFAULT_I2C_SCL_PIN)
     #warning i2c / bmp280_i2c example requires a board with I2C pins
         puts("Default I2C pins were not defined");
@@ -58,23 +57,35 @@ Testing via Serial Monitor & 2.4GHz
 2. Enter Module to Test
 
 Modules
-- Switch
-- Buttons 1&2
-- LEDs 1&2
-- Buzzer
-- Servo 1&2&3
-- BMP280
-- MPU 6050
-- SD
-- NRF24L01
-- Pyros 1&2
+- Switch 0
+- Buttons 1&2 1 2
+- LEDs 1&2 3 4
+- Buzzer 5
+- Servo 1&2&3 6 7 8
+- BMP280 9
+- MPU 6050 10
+- SD 11
+- NRF24L01 12
+- Pyros 1&2 13 14
+*/
+
+/*
+enum modules { switch1, button1, button2, led1, led2, buzzer, servo1, servo2, servo3, bmp280, mpu6050, sd, rf24, pyro1, pyro2};
+
+
+int 
+
+
+class Check{
+    switchCheck()
+};
 */
 
 /*
 #include <stdio.h>
 #include "pico/stdlib.h"
 
-int main() {
+int fullCheck() {
     char input;
     bool mode;
 

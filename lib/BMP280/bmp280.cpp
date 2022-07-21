@@ -149,7 +149,7 @@ bool BMP280::init(){
     bmp280_init();
 
     // retrieve fixed compensation params
-    bmp280_get_calib_params(&params);
+    //bmp280_get_calib_params(&params);
 }
 
 int32_t BMP280::get_data(){

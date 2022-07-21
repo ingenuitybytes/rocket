@@ -31,7 +31,6 @@
 */
 
 // By default these devices  are on bus address 0x68
-static int addr = 0x68;
 
 void MPU6050::reset() {
     // Two byte reset. First byte register, second byte data
@@ -56,7 +55,7 @@ void MPU6050::readTempRaw() {
     *temp = buffer[0] << 8 | buffer[1];
 }
 
-void MPU6050::readTempRaw() {
+void MPU6050::readGyroRaw() {
     // For this particular device, we send the device the register we want to read
     // first, then subsequently read from the device. The register is auto incrementing
     // so we don't need to keep sending the register we want, just the first.
