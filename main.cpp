@@ -46,7 +46,16 @@ int main() {
     int32_t sensorData;
     enum flightStates {IDLE, Tracking, STOP};
     int flightState;
-    char filename[] = "test02.txt";
+    char filename[] = "flightData.txt";
+    FRESULT fr;
+    FATFS fs;
+    FIL fil;
+    int ret;
+    char buf[100];
+    bool role = false; // true = TX role, false = RX role
+    char payload[200];
+    char tracking[] = "Tracking";
+    char stop[] = "Stop";
 
     //Basic Inits
     stdio_init_all();
@@ -56,6 +65,7 @@ int main() {
     //Create Module Instances
     BMP280 bmp280;
     MPU6050 mpu6050;
+    RF24 radio(CE_PIN, CSN_PIN);
 
     //Reset Modules
     //bmp280.reset(); needed?
@@ -64,6 +74,7 @@ int main() {
     //Init Modules
     bmp280.init(); //include in getData Function
     //mpu6050.init(); why none needed?
+    sd_init_driver();
 
     //Get Sensor Data
     bmp280.getData();
@@ -72,24 +83,28 @@ int main() {
 
     switch(flightState){
         case IDLE:
-            if(rf_receive() = "Tracking"){
+            if(rfReceive(radio, payload, role) == tracking){
                 flightState = Tracking;
             }
         break;
         case Tracking:
             sensorData = bmp280.pressure;
-            rfSend(sensorData)
-            flashWrite(sensorData)
-            if(rf_receive = "STOP"){
+            rfSend(radio, payload, role);
+            //flashWrite(sensorData)
+            if(rfReceive(radio, payload, role) == stop){
                 flightState = STOP;
             }
             sleep_ms(250);
         break;
         case STOP:
-            flightData = flashRead()
-            sd_write(flightData)
-            rf_send("Tracking stopped")
-
+            //flightData = flashRead();
+            //Change to sdWrite Function
+            fr = f_mount(&fs, "0:", 1);
+            fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+            ret = f_printf(&fil, "Hello\r\n");
+            fr = f_close(&fil);
+            f_unmount("0:");
+            rfSend(radio, payload, role);
     }
 }
 
@@ -104,211 +119,59 @@ int main() {
 //printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
 
 
+// reset to bootloader - RF24: why is this needed?
+//radio.powerDown();
+//reset_usb_boot(0, 0);
 
 
-// instantiate an object for the nRF24L01 transceiver
-RF24 radio(CE_PIN, CSN_PIN);
 
-// Used to control whether this node is sending or receiving
-bool role = false; // true = TX role, false = RX role
 
-// For this example, we'll be using a payload containing
-// a single float number that will be incremented
-// on every successful transmission
-float payload = 0.0;
 
-bool setup()
+
+
+bool setup(RF24 radio, char payload)
 {
-    // Let these addresses be used for the pair
     uint8_t address[][6] = {"1Node", "2Node"};
-    // It is very helpful to think of an address as a path instead of as
-    // an identifying device destination
-
-    // to use different addresses on a pair of radios, we need a variable to
-    // uniquely identify which address this radio will use to transmit
     bool radioNumber = 1; // 0 uses address[0] to transmit, 1 uses address[1] to transmit
-
-    // wait here until the CDC ACM (serial port emulation) is connected
     while (!tud_cdc_connected()) {
         sleep_ms(10);
     }
-
-    // initialize the transceiver on the SPI bus
-    if (!radio.begin()) {
-        printf("radio hardware is not responding!!\n");
-        return false;
-    }
-
-    // Set the PA Level low to try preventing power supply related problems
-    // because these examples are likely run with nodes in close proximity to
-    // each other.
+    radio.begin();
     radio.setPALevel(RF24_PA_LOW); // RF24_PA_MAX is default.
-
-    // save on transmission time by setting the radio to only transmit the
-    // number of bytes we need to transmit a float
     radio.setPayloadSize(sizeof(payload)); // float datatype occupies 4 bytes
-
-    // set the TX address of the RX node into the TX pipe
-    radio.openWritingPipe(address[radioNumber]); // always uses pipe 0
-
-    // set the RX address of the TX node into a RX pipe
+    radio.openWritingPipe(address[radioNumber]);
     radio.openReadingPipe(1, address[!radioNumber]); // using pipe 1
-
-    // additional setup specific to the node's role
-    if (role) {
-        radio.stopListening(); // put radio in TX mode
-    }
-    else {
-        radio.startListening(); // put radio in RX mode
-    }
-
-    // For debugging info
-    // radio.printDetails();       // (smaller) function that prints raw register values
-    // radio.printPrettyDetails(); // (larger) function that prints human readable data
-
-    // role variable is hardcoded to RX behavior, inform the user of this
-    printf("*** PRESS 'T' to begin transmitting to the other node\n");
-
+    radio.startListening(); // put radio in RX mode
     return true;
-} // setup
+}
 
-void loop()
-{
-    if (role) {
-        // This device is a TX node
 
-        uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
-        bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
-        uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
-
-        if (report) {
-            // payload was delivered; print the payload sent & the timer result
-            printf("Transmission successful! Time to transmit = %llu us. Sent: %f\n", end_timer - start_timer, payload);
-
-            // increment float payload
-            payload += 0.01;
-        }
-        else {
-            // payload was not delivered
-            printf("Transmission failed or timed out\n");
-        }
-
-        // to make this example readable in the serial terminal
-        sleep_ms(1000); // slow transmissions down by 1 second
-    }
-    else {
-        // This device is a RX node
+char* rfReceive(RF24 radio, char* payload, bool role){
+    // Become the RX node
+        role = false;
+        radio.startListening();
+    
+    // This device is a RX node
 
         uint8_t pipe;
         if (radio.available(&pipe)) {               // is there a payload? get the pipe number that recieved it
             uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
             radio.read(&payload, bytes);            // fetch payload from FIFO
 
-            // print the size of the payload, the pipe number, payload's value
-            printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
         }
-    } // role
-
-    char input = getchar_timeout_us(0); // get char from buffer for user input
-    if (input != PICO_ERROR_TIMEOUT) {
-        // change the role via the serial terminal
-
-        if ((input == 'T' || input == 't') && !role) {
-            // Become the TX node
-
-            role = true;
-            printf("*** CHANGING TO TRANSMIT ROLE -- PRESS 'R' TO SWITCH BACK\n");
-            radio.stopListening();
-        }
-        else if ((input == 'R' || input == 'r') && role) {
-            // Become the RX node
-
-            role = false;
-            printf("*** CHANGING TO RECEIVE ROLE -- PRESS 'T' TO SWITCH BACK\n");
-            radio.startListening();
-        }
-        else if (input == 'b' || input == 'B') {
-            // reset to bootloader
-            radio.powerDown();
-            reset_usb_boot(0, 0);
-        }
-    }
-}
-
-int main()
-{
-    stdio_init_all(); // init necessary IO for the RP2040
-
-    while (!setup()) { // if radio.begin() failed
-        // hold program in infinite attempts to initialize radio
-    }
-    while (true) {
-        loop();
-    }
-    return 0; // we will never reach this
+    
+    return payload;
 }
 
 
-
-
-
-
-/*
-
-//SD-Test
-
-FRESULT fr;
-    FATFS fs;
-    FIL fil;
-    int ret;
-    char buf[100];
-
-
-
-// Initialize SD card
-if (!sd_init_driver()) {
-    printf("ERROR: Could not initialize SD card\r\n");
-    while (true);
-
-}
-// Mount drive
-fr = f_mount(&fs, "0:", 1);
-if (fr != FR_OK) {
-    printf("ERROR: Could not mount filesystem (%d)\r\n", fr);
-    while (true);
+int rfSend(RF24 radio, char* payload, bool role){
+    // Become the TX node
+        role = true;
+        radio.stopListening();
+        
+    // This device is a TX node
+    uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
+    bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
+    uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
 }
 
-// Open file for writing ()
-fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
-if (fr != FR_OK) {
-    printf("ERROR: Could not open file (%d)\r\n", fr);
-    while (true);
-}
-
-// Write something to file
-ret = f_printf(&fil, "This is another test\r\n");
-if (ret < 0) {
-    printf("ERROR: Could not write to file (%d)\r\n", ret);
-    f_close(&fil);
-    while (true);
-}
-
-
-// Open file for reading
-    fr = f_open(&fil, filename, FA_READ);
-    if (fr != FR_OK) {
-        printf("ERROR: Could not open file (%d)\r\n", fr);
-        while (true);
-    }
-
-    // Close file
-    fr = f_close(&fil);
-    if (fr != FR_OK) {
-        printf("ERROR: Could not close file (%d)\r\n", fr);
-        while (true);
-    }
-
-// Unmount drive
-    f_unmount("0:");
-
-*/
