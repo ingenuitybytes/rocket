@@ -39,7 +39,8 @@ class MPU6050{
         int16_t rawGyro[3];
         int16_t rawAccel[3];
         void reset();
-        void readTempRaw();
-        void readGyroRaw();
-        void readAccelRaw();
+        void getTempRaw();
+        void getGyroRaw();
+        void getAccelRaw();
+        void getData();
 };

@@ -104,6 +104,6 @@ class BMP280{
         int32_t temperature;
         int32_t pressure;
         void init();
-        void get_data();
+        void getData();
         void reset();
 };

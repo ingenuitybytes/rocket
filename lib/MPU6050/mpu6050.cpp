@@ -39,7 +39,7 @@ void MPU6050::reset() {
     i2c_write_blocking(i2c_default, addr, buf, 2, false);
 }
 
-void MPU6050::readTempRaw() {
+void MPU6050::getTempRaw() {
     // For this particular device, we send the device the register we want to read
     // first, then subsequently read from the device. The register is auto incrementing
     // so we don't need to keep sending the register we want, just the first.
@@ -55,7 +55,7 @@ void MPU6050::readTempRaw() {
     rawTemp = buffer[0] << 8 | buffer[1];
 }
 
-void MPU6050::readGyroRaw() {
+void MPU6050::getGyroRaw() {
     // For this particular device, we send the device the register we want to read
     // first, then subsequently read from the device. The register is auto incrementing
     // so we don't need to keep sending the register we want, just the first.
@@ -73,7 +73,7 @@ void MPU6050::readGyroRaw() {
     }
 }
 
-void MPU6050::readAccelRaw() {
+void MPU6050::getAccelRaw() {
     uint8_t buffer[6];
 
     // Start reading acceleration registers from register 0x3B for 6 bytes
@@ -85,3 +85,11 @@ void MPU6050::readAccelRaw() {
         rawAccel[i] = (buffer[i * 2] << 8 | buffer[(i * 2) + 1]);
     }
 }
+
+
+void MPU6050::getData() {
+    getTempRaw();
+    getGyroRaw();
+    getAccelRaw();
+}
+
