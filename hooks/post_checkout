@@ -1,2 +1,4 @@
 #!/bin/bash
+cd /
+cd pico/pico-sdk
 git submodule update --init --recursive
