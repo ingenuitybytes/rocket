@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
@@ -6,7 +6,7 @@
 #include "./lib/MPU6050/mpu6050.h"
 #include "pico/binary_info.h"
 #include "./src/bus_init.cpp"
-
+*/
 
 /*
 int testMPU6050() {
@@ -31,64 +31,6 @@ int testMPU6050() {
     return 0;
 }
 */
-
-
-/*
-Testing via Serial Monitor & 2.4GHz
-1. Select Serial Monitor or 2.4GHz
-2. Enter Module to Test
-
-Modules
-- Switch 0
-- Buttons 1&2 1 2
-- LEDs 1&2 3 4
-- Buzzer 5
-- Servo 1&2&3 6 7 8
-- BMP280 9
-- MPU 6050 10
-- SD 11
-- NRF24L01 12
-- Pyros 1&2 13 14
-*/
-
-/*
-enum modules { switch1, button1, button2, led1, led2, buzzer, servo1, servo2, servo3, bmp280, mpu6050, sd, rf24, pyro1, pyro2};
-
-
-int 
-
-
-class Check{
-    switchCheck()
-};
-*/
-
-/*
-#include <stdio.h>
-#include "pico/stdlib.h"
-
-int fullCheck() {
-    char input;
-    bool mode;
-
-    stdio_init_all();
-
-    printf("Select between Serial or 2.4GHz communication");
-    input = getchar();
-    mode = input ? 0 : 1;
-
-        printf("Hello, world!\n");
-        sleep_ms(1000);
-
-    return 0;
-}
-
-*/
-
-
-
-
-
 
 
 

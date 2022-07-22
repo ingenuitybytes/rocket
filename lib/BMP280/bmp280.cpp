@@ -152,7 +152,7 @@ void BMP280::init(){
     bmp280_get_calib_params(&params);
 }
 
-void BMP280::get_data(){
+void BMP280::getData(){
     int32_t raw_temperature;
     int32_t raw_pressure;
     bmp280_read_raw(&raw_temperature, &raw_pressure);
