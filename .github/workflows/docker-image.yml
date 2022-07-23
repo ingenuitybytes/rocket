@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-      - name: Checkout submodules
+      # - name: Checkout submodules
       #  run: |
 
       - name: Docker meta
