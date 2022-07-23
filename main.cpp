@@ -1,3 +1,14 @@
+/*Concerns
+one 3 color led
+MPU6050 not accurate but BNO055 too expensive
+right clock speed
+PFW or PWM mode
+cycles of pico flash storage
+continuity check for pyros
+Later maybe one core for calculation and one for communication
+pico examples sources: pwm-servos/led, flash, adc-battery meter
+*/
+
 /* Flight Code
 States: IDLE, Tracking, STOP
 IDLE: wait for Start Tracking-Command from Host
@@ -122,7 +133,6 @@ int main() {
 // reset to bootloader - RF24: why is this needed?
 //radio.powerDown();
 //reset_usb_boot(0, 0);
-
 
 
 
