@@ -8,7 +8,7 @@ RUN cd pico && git clone -b master https://github.com/raspberrypi/pico-sdk.git
 RUN cd /
 RUN cd pico/pico-sdk
 RUN git pull
-RUN git submodule sync
+RUN submodule sync
 RUN git submodule update --init
 
 COPY . /pico
