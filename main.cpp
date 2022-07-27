@@ -50,8 +50,102 @@ Modules
 void sdWrite(char* filename, char* data);
 bool rfSetup(RF24 radio, char* payload);
 char* rfReceive(RF24 radio, char* payload);
-bool rfSend(RF24 radio, char* payload);
+void rfSend(RF24 radio, char* payload);
 
+
+//Transmitter
+
+int main() {
+
+    char payload[6] = "Hello";
+
+    stdio_init_all();
+
+    RF24 radio(CE_PIN, CSN_PIN);
+
+    sleep_ms(7000);
+
+    printf("Hi");
+    
+    while(!rfSetup(radio, payload)){
+
+    }
+
+    
+    while(true){
+        rfSend(radio, payload);
+    }
+
+    return 0;
+
+}
+
+
+
+
+
+
+//Receiver
+/*
+int main() {
+
+    char payload[6];
+
+    stdio_init_all();
+
+    RF24 radio(CE_PIN, CSN_PIN);
+
+    sleep_ms(7000);
+
+    printf("Hello");
+    
+    while(!rfSetup(radio, payload)){
+
+    }
+
+    
+    while(true){
+        rfReceive(radio, payload);
+        printf("%s", payload);
+
+    }
+
+    return 0;
+
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 //FC
 int main() {
 
@@ -60,12 +154,12 @@ int main() {
     //enum flightStates {IDLE, Tracking, STOP};
     int flightState = 0;
     char filename[] = "flightData.txt";
-    //char payload[200];
+    char payload[200];
     //char tracking[] = "Tracking";
     //char stop[] = "Stop";
     int i = 0;
     int j = 0;
-    char command[100];
+    char command[10];
 
     //Basic Inits
     stdio_init_all();
@@ -84,7 +178,7 @@ int main() {
         command[i+1] = '\0';
         printf("%d%s", j, command);
         j++;
-    }*/
+    }
 
     //Create Module Instances
     BMP280 bmp280;
@@ -99,22 +193,20 @@ int main() {
     bmp280.init(); //include in getData Function
     //mpu6050.init(); why none needed?
     sd_init_driver();
-    //rfSetup(radio, payload);
+    rfSetup(radio, payload);
     
     //Replace with switch and enum
     while(1){
         printf("-----\n");
         printf("%d\n", flightState);
+        rfReceive(radio, command);
         if(flightState == 0){
-            printf("Hi\n");
-
-            if(i == 100){
+            printf("Hi");
+            if(command[0] == 1){
                 flightState = 1;
             }
-            //printf("%d", i);
-            i++;
+            sleep_ms(100);
         }
-        sleep_ms(100);
 
         if(flightState == 1){
             bmp280.getData();
@@ -122,11 +214,11 @@ int main() {
             printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
             // add convert to string
             //data = sensorData;
-            rfSend(radio, payload);
             sprintf(sensorData, "%d", bmp280.pressure);
             sdWrite(filename, sensorData);
+            rfSend(radio, payload);
             //strcpy(command, rfReceive(radio));
-            if(j == 10){
+            if(command[0] = 2){
                 flightState = 2;
             }
             //if(rfReceive(radio, payload) == stop){
@@ -134,7 +226,6 @@ int main() {
             //}
             sleep_ms((int)1000/sensorReadRate);
             //printf("%d", j);
-            j++;
         }
 
         if(flightState == 2){
@@ -144,6 +235,7 @@ int main() {
         }
     }
 }
+*/
 
 /*
     switch(flightState){
@@ -195,13 +287,14 @@ int main() {
 int main() {
 
     int32_t sensorData;
-    enum flightStates {IDLE, Tracking, STOP};
-    int flightState;
+    //enum flightStates {IDLE, Tracking, STOP};
+    int flightState = 0;
     char filename[] = "flightData.txt";
     char payload[200];
     char tracking[] = "Tracking";
     char stop[] = "Stop";
     char data[200];
+    char command[10];
 
     //Basic Inits
     stdio_init_all();
@@ -213,33 +306,37 @@ int main() {
     
     //Init Modules
     rfSetup(radio, payload);
+    printf("Hello\n\n");
 
-    switch(flightState){
-        case IDLE:
-            if(getchar() == 1){
-                rfSend(radio, payload)
-                flightState = Tracking;
+    while(1){
+        printf("Enter a number: ");
+        command[0] = getchar();
+        printf("\n");
+
+        if(flightState == 0){
+            printf("0");
+            if(command[0] == '1'){
+                rfSend(radio, payload);
+                flightState = 1;
             }
-        break;
-        case Tracking:
-            strcpy(data, rfReceive(radio, payload))
-            fileWrite();
-            if(getchar() == 2){
-                rfSend(radio, payload)
-                flightState = STOP;
+        }
+        else if(flightState == 1){
+            printf("1");
+            strcpy(data, rfReceive(radio, payload));
+            printf("%s", data);
+            //fileWrite();
+            if(command[0] == '2'){
+                rfSend(radio, payload);
+                flightState = 2;
             }
-        break;
-        case STOP:
-        break;
+        }
+        else if(flightState == 2){
+            printf("2");
+            printf("");
+        }
     }
 }
-
-
 */
-
-
-
-
 
 
 
@@ -295,7 +392,10 @@ bool rfSetup(RF24 radio, char* payload){
     while (!tud_cdc_connected()) {
         sleep_ms(10);
     }
-    radio.begin();
+    if (!radio.begin()) {
+        printf("radio hardware is not responding!!\n");
+        return false;
+    }
     radio.setPALevel(RF24_PA_LOW); // RF24_PA_MAX is default.
     radio.setPayloadSize(sizeof(payload)); // float datatype occupies 4 bytes
     radio.openWritingPipe(address[radioNumber]);
@@ -316,19 +416,30 @@ char* rfReceive(RF24 radio, char* payload){
             uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
             radio.read(&payload, bytes);            // fetch payload from FIFO
 
+            // print the size of the payload, the pipe number, payload's value
+            printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
         }
     
     return payload;
 }
 
 
-bool rfSend(RF24 radio, char* payload){
+void rfSend(RF24 radio, char* payload){
     // Become the TX node
     radio.stopListening();
         
     // This device is a TX node
-    //uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
+    uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
     bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
-    //uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
-    return report;
+    uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
+
+    if (report) {
+            // payload was delivered; print the payload sent & the timer result
+            printf("Transmission successful! Time to transmit = %llu us. Sent: %f\n", end_timer - start_timer, payload);
+        }
+        else {
+            // payload was not delivered
+            printf("Transmission failed or timed out\n");
+        }
+        sleep_ms(1000); // slow transmissions down by 1 second
 }
