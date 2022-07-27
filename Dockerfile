@@ -6,7 +6,7 @@ RUN cd / && mkdir pico
 RUN cd pico && git clone -b master https://github.com/raspberrypi/pico-sdk.git
 
 WORKDIR /pico/pico-sdk
-RUN git submodule update --init
+RUN git submodule update --init --recursive
 
 COPY . /pico
 
