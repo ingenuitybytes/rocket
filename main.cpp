@@ -3,19 +3,19 @@ one 3 color led
 MPU6050 not accurate but BNO055 too expensive
 right clock speed
 PFW or PWM mode
-cycles of pico flash storage
+use external storage chip
 continuity check for pyros
 Later maybe one core for calculation and one for communication
-pico examples sources: pwm-servos/led, flash, adc-battery meter
+pico examples sources: pwm-servos/led, adc-battery meter
 */
 
-/* Flight Code
+/*
+Flight Code
 States: IDLE, Tracking, STOP
 IDLE: wait for Start Tracking-Command from Host
 Tracking: read all Data from BMP280&MPU6050
 STOP: write Data to SD-Card when Stop Tracking-Command is received
 
-/*
 Access via Serial Monitor or 2.4GHz
 
 Modules
@@ -44,34 +44,47 @@ Modules
 #include <tusb.h>         // tud_cdc_connected()
 #include <RF24.h>         // RF24 radio object
 #include "defaultPins.h"  // board presumptive default pin numbers for CE_PIN and CSN_PIN
-#include <stdio.h>
-#include "pico/stdlib.h"
 #include "sd_card.h"
 #include "ff.h"
 
+void sdWrite(char* filename, char* data);
+bool rfSetup(RF24 radio, char* payload);
+char* rfReceive(RF24 radio, char* payload);
+bool rfSend(RF24 radio, char* payload);
 
-
+//FC
 int main() {
 
     int sensorReadRate = 400;
-    int32_t sensorData;
-    enum flightStates {IDLE, Tracking, STOP};
-    int flightState;
+    char sensorData[200];
+    //enum flightStates {IDLE, Tracking, STOP};
+    int flightState = 0;
     char filename[] = "flightData.txt";
-    FRESULT fr;
-    FATFS fs;
-    FIL fil;
-    int ret;
-    char buf[100];
-    bool role = false; // true = TX role, false = RX role
-    char payload[200];
-    char tracking[] = "Tracking";
-    char stop[] = "Stop";
+    //char payload[200];
+    //char tracking[] = "Tracking";
+    //char stop[] = "Stop";
+    int i = 0;
+    int j = 0;
+    char command[100];
 
     //Basic Inits
     stdio_init_all();
     i2cInit();
     //spiInit();
+
+    //Find better way for entering strings
+    /*
+    j = 0;
+    while(1){
+        i = 0;
+        do{
+            command[i] = getchar();
+            i++;
+        }while(command[i-1] != 0x0D);
+        command[i+1] = '\0';
+        printf("%d%s", j, command);
+        j++;
+    }*/
 
     //Create Module Instances
     BMP280 bmp280;
@@ -86,38 +99,162 @@ int main() {
     bmp280.init(); //include in getData Function
     //mpu6050.init(); why none needed?
     sd_init_driver();
+    //rfSetup(radio, payload);
+    
+    //Replace with switch and enum
+    while(1){
+        printf("-----\n");
+        printf("%d\n", flightState);
+        if(flightState == 0){
+            printf("Hi\n");
 
-    //Get Sensor Data
-    bmp280.getData();
-    //mpu6050.getData();
+            if(i == 100){
+                flightState = 1;
+            }
+            //printf("%d", i);
+            i++;
+        }
+        sleep_ms(100);
 
+        if(flightState == 1){
+            bmp280.getData();
+            mpu6050.getData();
+            printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+            // add convert to string
+            //data = sensorData;
+            rfSend(radio, payload);
+            sprintf(sensorData, "%d", bmp280.pressure);
+            sdWrite(filename, sensorData);
+            //strcpy(command, rfReceive(radio));
+            if(j == 10){
+                flightState = 2;
+            }
+            //if(rfReceive(radio, payload) == stop){
+            //    flightState = STOP;
+            //}
+            sleep_ms((int)1000/sensorReadRate);
+            //printf("%d", j);
+            j++;
+        }
+
+        if(flightState == 2){
+            //sdWrite(filename, sensorData);
+            //rfSend(radio, payload);
+            break;
+        }
+    }
+}
+
+/*
+    switch(flightState){
+        case 0:
+            //if(rfReceive(radio, payload) == tracking){
+            //    flightState = Tracking;
+            //}
+
+            printf("Hi\n");
+
+            if(i == 100){
+                flightState = 1;
+            }
+            printf("%d", i);
+            i++;
+        break;
+    }
+    */
+
+/*case 1:
+            bmp280.getData();
+            mpu6050.getData();
+            sensorData = bmp280.pressure;
+            // add convert to string
+            //data = sensorData;
+            //rfSend(radio, payload);
+            sdWrite(filename, sensorData);
+            //strcpy(command, rfReceive(radio));
+            if(j == 10){
+                flightState = STOP;
+            }
+            //if(rfReceive(radio, payload) == stop){
+            //    flightState = STOP;
+            //}
+            sleep_ms((int)1000/sensorReadRate);
+            printf("%d", j);
+            j++;
+        break;
+        case 2:
+            //sdWrite(filename, sensorData);
+            //rfSend(radio, payload);
+            break;
+        */
+
+////////////////////////////////////////////////////////////////
+
+/*
+//User
+int main() {
+
+    int32_t sensorData;
+    enum flightStates {IDLE, Tracking, STOP};
+    int flightState;
+    char filename[] = "flightData.txt";
+    char payload[200];
+    char tracking[] = "Tracking";
+    char stop[] = "Stop";
+    char data[200];
+
+    //Basic Inits
+    stdio_init_all();
+    i2cInit();
+    //spiInit();
+
+    //Create Module Instances
+    RF24 radio(CE_PIN, CSN_PIN);
+    
+    //Init Modules
+    rfSetup(radio, payload);
 
     switch(flightState){
         case IDLE:
-            if(rfReceive(radio, payload, role) == tracking){
+            if(getchar() == 1){
+                rfSend(radio, payload)
                 flightState = Tracking;
             }
         break;
         case Tracking:
-            sensorData = bmp280.pressure;
-            rfSend(radio, payload, role);
-            //flashWrite(sensorData)
-            if(rfReceive(radio, payload, role) == stop){
+            strcpy(data, rfReceive(radio, payload))
+            fileWrite();
+            if(getchar() == 2){
+                rfSend(radio, payload)
                 flightState = STOP;
             }
-            sleep_ms(250);
         break;
         case STOP:
-            //flightData = flashRead();
-            //Change to sdWrite Function
-            fr = f_mount(&fs, "0:", 1);
-            fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
-            ret = f_printf(&fil, "Hello\r\n");
-            fr = f_close(&fil);
-            f_unmount("0:");
-            rfSend(radio, payload, role);
+        break;
     }
 }
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
 //printf("Temp. = %.2f C\n", bmp280.temperature / 100.f);
@@ -138,9 +275,21 @@ int main() {
 
 
 
+//Change to bool later on, to check if writing to file was successful
+void sdWrite(char* filename, char* data){
+    FRESULT fr;
+    FATFS fs;
+    FIL fil;
+    int ret;
+    char buf[100];
+    fr = f_mount(&fs, "0:", 1);
+    fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+    ret = f_printf(&fil, data);
+    fr = f_close(&fil);
+    f_unmount("0:");
+}
 
-bool setup(RF24 radio, char payload)
-{
+bool rfSetup(RF24 radio, char* payload){
     uint8_t address[][6] = {"1Node", "2Node"};
     bool radioNumber = 1; // 0 uses address[0] to transmit, 1 uses address[1] to transmit
     while (!tud_cdc_connected()) {
@@ -156,10 +305,9 @@ bool setup(RF24 radio, char payload)
 }
 
 
-char* rfReceive(RF24 radio, char* payload, bool role){
+char* rfReceive(RF24 radio, char* payload){
     // Become the RX node
-        role = false;
-        radio.startListening();
+    radio.startListening();
     
     // This device is a RX node
 
@@ -174,14 +322,13 @@ char* rfReceive(RF24 radio, char* payload, bool role){
 }
 
 
-int rfSend(RF24 radio, char* payload, bool role){
+bool rfSend(RF24 radio, char* payload){
     // Become the TX node
-        role = true;
-        radio.stopListening();
+    radio.stopListening();
         
     // This device is a TX node
-    uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
+    //uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
     bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
-    uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
+    //uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
+    return report;
 }
-
