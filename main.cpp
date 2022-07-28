@@ -48,11 +48,10 @@ Modules
 #include "sd_card.h"
 #include "ff.h"
 
-void sdWrite(char* filename, float data);
+void sdWrite(char* filename, char* data);
 bool rfSetup(RF24& radio, bool radioName, float payload);
 void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
-void printString(char* word, int length);
  
 
 //FC
@@ -60,7 +59,7 @@ void printString(char* word, int length);
 int main() {
     //enum flightStates {IDLE, Tracking, STOP};
     int sensorReadRate = 400;
-    char sensorData[20];
+    char sensorData[100];
     bool radioNumber = 1;
     int flightState = 0;
     char filename[] = "flightData.txt";
@@ -94,7 +93,6 @@ int main() {
         //payload = rfReceive(radio, payload);
         
         if(flightState == 0){
-            printf("0\n");
             payload = rfReceive(radio, payload);
             if(payload == 1){
                 flightState = 1;
@@ -108,18 +106,23 @@ int main() {
             printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
             //sprintf(sensorData, "%d", bmp280.pressure);
             //sdWrite(filename, sensorData);
-            payload = (float)bmp280.pressure;
-            rfSend(radio, payload);
+            //payload = (float)bmp280.pressure;
+            //rfSend(radio, payload);
+            //do{}while();
             payload = rfReceive(radio, payload);
             if(payload == 2){
                 flightState = 2;
             }
-            sleep_ms((int)1000/sensorReadRate);
+            sleep_ms(1000);
         }
 
         if(flightState == 2){
-            printf("2\n");
-            break;
+            printf("");
+            payload = rfReceive(radio, payload);
+            if(payload == 0){
+                flightState = 0;
+            }
+            sleep_ms(1000);
         }
     }
 }
