@@ -11,10 +11,10 @@ pico examples sources: pwm-servos/led, adc-battery meter
 
 /*
 Flight Code
-States: IDLE, Tracking, STOP
-IDLE: wait for Start Tracking-Command from Host
-Tracking: read all Data from BMP280&MPU6050
-STOP: write Data to SD-Card when Stop Tracking-Command is received
+States: IDLE, TRACKING, STOP
+IDLE: wait for Start TRACKING-Command from Host
+TRACKING: read all Data from BMP280&MPU6050
+STOP: write Data to SD-Card when Stop TRACKING-Command is received
 
 Access via Serial Monitor or 2.4GHz
 
@@ -57,11 +57,17 @@ float rfReceive(RF24& radio, float payload);
 //FC
 
 int main() {
-    //enum flightStates {IDLE, Tracking, STOP};
-    int sensorReadRate = 400;
+    enum flightStates {
+        IDLE, 
+        TRACKING, 
+        STOP
+    };
+    flightStates flightState = IDLE;
+    
+    int sensorReadRate = 400; //Hz
     char sensorData[100];
     bool radioNumber = 1;
-    int flightState = 0;
+    //int flightState = 0;
     char filename[] = "flightData.txt";
     float payload;
 
@@ -87,47 +93,49 @@ int main() {
     sleep_ms(5000);
     
     //Replace with switch and enum
-    while(1){
-        //printf("-----\n");
-        //printf("%d\n", flightState);
-        //payload = rfReceive(radio, payload);
-        
-        if(flightState == 0){
-            payload = rfReceive(radio, payload);
-            if(payload == 1){
-                flightState = 1;
-            }
-            sleep_ms(100);
-        }
+    while(true) {
+        payload = rfReceive(radio, payload);
+        switch (flightState) {
+            case IDLE:
+                printf("IDLE\n");
+                
+                payload = rfReceive(radio, payload);
+                if(payload == 1)    {
+                    flightState = TRACKING;
+                }
+                sleep_ms(100);
+                break;
+            case TRACKING:
+                printf("TRACKING\n");
+                
+                bmp280.getData();
+                mpu6050.getData();
+                printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+                //sprintf(sensorData, "%d", bmp280.pressure);
+                //sdWrite(filename, sensorData);
+                //payload = (float)bmp280.pressure;
+                //rfSend(radio, payload);
+                
+                payload = rfReceive(radio, payload);
+                if(payload == 2) {
+                    flightState = STOP;
+                }
+                sleep_ms(1000);
+                break;
+            case STOP:
+                printf("STOP\n");
 
-        if(flightState == 1){
-            bmp280.getData();
-            mpu6050.getData();
-            printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-            //sprintf(sensorData, "%d", bmp280.pressure);
-            //sdWrite(filename, sensorData);
-            //payload = (float)bmp280.pressure;
-            //rfSend(radio, payload);
-            //do{}while();
-            payload = rfReceive(radio, payload);
-            if(payload == 2){
-                flightState = 2;
-            }
-            sleep_ms(1000);
-        }
-
-        if(flightState == 2){
-            printf("");
-            payload = rfReceive(radio, payload);
-            if(payload == 0){
-                flightState = 0;
-            }
-            sleep_ms(1000);
+                payload = rfReceive(radio, payload);
+                if(payload == 0){
+                    flightState = IDLE;
+                }
+                sleep_ms(1000);
+                break;
+            default:
+                break;
         }
     }
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 
@@ -138,7 +146,7 @@ int main() {
 int main() {
 
     int32_t sensorData;
-    //enum flightStates {IDLE, Tracking, STOP};
+    //enum flightStates {IDLE, TRACKING, STOP};
     int flightState = 0;
     char filename[] = "flightData.txt";
     char command;
@@ -188,22 +196,6 @@ int main() {
 }*/
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Change to bool later on, to check if writing to file was successful
 void sdWrite(char* filename, char* data){
     FRESULT fr;
@@ -217,8 +209,6 @@ void sdWrite(char* filename, char* data){
     fr = f_close(&fil);
     f_unmount("0:");
 }
-
-
 
 bool rfSetup(RF24& radio, bool radioNumber, float payload){
     uint8_t address[][6] = {"1Node", "2Node"};
