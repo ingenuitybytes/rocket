@@ -33,7 +33,8 @@ Modules
 
 
 #include <stdio.h>
-#include <string.h>
+#include <iostream>
+#include <fstream>
 #include "pico/stdlib.h" // printf(), sleep_ms(), getchar_timeout_us(), to_us_since_boot(), get_absolute_time()
 #include "hardware/i2c.h"
 #include "./lib/BMP280/bmp280.h"
@@ -52,128 +53,22 @@ bool rfSetup(RF24& radio, bool radioName, float payload);
 void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
 void printString(char* word, int length);
+ 
 
-
-//Transmitter
-/*
-int main() {
-
-    float payload = 8.10;
-    bool radioNumber = 0;
-    bool success = false;
-
-    stdio_init_all();
-    RF24 radio(CE_PIN, CSN_PIN);
-
-    sleep_ms(5000);
-
-    while(!success){
-        success = rfSetup(radio, radioNumber, payload);
-    }
-    
-    while(true){
-        rfSend(radio, payload);
-    }
-    return 0;
-
-}
-*/
-
-
-
-
-
-
-//Receiver
-
-int main() {
-
-    float payload = 0.0;
-    bool radioNumber = 1;
-    bool success = false;
-
-    stdio_init_all();
-    RF24 radio(CE_PIN, CSN_PIN);
-
-    sleep_ms(5000);
-
-    while(!success){
-        success = rfSetup(radio, radioNumber, payload);
-    }
-
-    while(true){
-        payload = rfReceive(radio, payload);
-    }
-
-    return 0;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 //FC
-int main() {
 
-    int sensorReadRate = 400;
-    char sensorData[200];
+int main() {
     //enum flightStates {IDLE, Tracking, STOP};
+    int sensorReadRate = 400;
+    char sensorData[20];
+    bool radioNumber = 1;
     int flightState = 0;
     char filename[] = "flightData.txt";
-    char payload[200];
-    //char tracking[] = "Tracking";
-    //char stop[] = "Stop";
-    int i = 0;
-    int j = 0;
-    char command[10];
+    float payload;
 
     //Basic Inits
     stdio_init_all();
     i2cInit();
-    //spiInit();
-
-    //Find better way for entering strings
-    /*
-    j = 0;
-    while(1){
-        i = 0;
-        do{
-            command[i] = getchar();
-            i++;
-        }while(command[i-1] != 0x0D);
-        command[i+1] = '\0';
-        printf("%d%s", j, command);
-        j++;
-    }
 
     //Create Module Instances
     BMP280 bmp280;
@@ -188,16 +83,20 @@ int main() {
     bmp280.init(); //include in getData Function
     //mpu6050.init(); why none needed?
     sd_init_driver();
-    rfSetup(radio, payload);
+    while(!rfSetup(radio, radioNumber, payload)){}
+
+    sleep_ms(5000);
     
     //Replace with switch and enum
     while(1){
-        printf("-----\n");
-        printf("%d\n", flightState);
-        rfReceive(radio, command);
+        //printf("-----\n");
+        //printf("%d\n", flightState);
+        //payload = rfReceive(radio, payload);
+        
         if(flightState == 0){
-            printf("Hi");
-            if(command[0] == 1){
+            printf("0\n");
+            payload = rfReceive(radio, payload);
+            if(payload == 1){
                 flightState = 1;
             }
             sleep_ms(100);
@@ -207,120 +106,73 @@ int main() {
             bmp280.getData();
             mpu6050.getData();
             printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-            // add convert to string
-            //data = sensorData;
-            sprintf(sensorData, "%d", bmp280.pressure);
-            sdWrite(filename, sensorData);
+            //sprintf(sensorData, "%d", bmp280.pressure);
+            //sdWrite(filename, sensorData);
+            payload = (float)bmp280.pressure;
             rfSend(radio, payload);
-            //strcpy(command, rfReceive(radio));
-            if(command[0] = 2){
+            payload = rfReceive(radio, payload);
+            if(payload == 2){
                 flightState = 2;
             }
-            //if(rfReceive(radio, payload) == stop){
-            //    flightState = STOP;
-            //}
             sleep_ms((int)1000/sensorReadRate);
-            //printf("%d", j);
         }
 
         if(flightState == 2){
-            //sdWrite(filename, sensorData);
-            //rfSend(radio, payload);
+            printf("2\n");
             break;
         }
     }
 }
-*/
 
-/*
-    switch(flightState){
-        case 0:
-            //if(rfReceive(radio, payload) == tracking){
-            //    flightState = Tracking;
-            //}
 
-            printf("Hi\n");
-
-            if(i == 100){
-                flightState = 1;
-            }
-            printf("%d", i);
-            i++;
-        break;
-    }
-    */
-
-/*case 1:
-            bmp280.getData();
-            mpu6050.getData();
-            sensorData = bmp280.pressure;
-            // add convert to string
-            //data = sensorData;
-            //rfSend(radio, payload);
-            sdWrite(filename, sensorData);
-            //strcpy(command, rfReceive(radio));
-            if(j == 10){
-                flightState = STOP;
-            }
-            //if(rfReceive(radio, payload) == stop){
-            //    flightState = STOP;
-            //}
-            sleep_ms((int)1000/sensorReadRate);
-            printf("%d", j);
-            j++;
-        break;
-        case 2:
-            //sdWrite(filename, sensorData);
-            //rfSend(radio, payload);
-            break;
-        */
 
 ////////////////////////////////////////////////////////////////
 
+
 /*
 //User
+
 int main() {
 
     int32_t sensorData;
     //enum flightStates {IDLE, Tracking, STOP};
     int flightState = 0;
     char filename[] = "flightData.txt";
-    char payload[200];
-    char tracking[] = "Tracking";
-    char stop[] = "Stop";
-    char data[200];
-    char command[10];
+    char command;
+    float payload = 0.0;
+    bool radioNumber = 0;
 
     //Basic Inits
     stdio_init_all();
     i2cInit();
-    //spiInit();
 
     //Create Module Instances
     RF24 radio(CE_PIN, CSN_PIN);
     
     //Init Modules
-    rfSetup(radio, payload);
-    printf("Hello\n\n");
+    while(!rfSetup(radio, radioNumber, payload)){}
+
+    sleep_ms(5000);
 
     while(1){
         printf("Enter a number: ");
-        command[0] = getchar();
+        command = getchar();
         printf("\n");
 
         if(flightState == 0){
             printf("0");
-            if(command[0] == '1'){
+            if(command == '1'){
+                payload = 1.0;
                 rfSend(radio, payload);
                 flightState = 1;
             }
         }
         else if(flightState == 1){
             printf("1");
-            strcpy(data, rfReceive(radio, payload));
-            printf("%s", data);
+            payload = rfReceive(radio, payload);
             //fileWrite();
-            if(command[0] == '2'){
+            if(command == '2'){
+                payload = 2.0;
                 rfSend(radio, payload);
                 flightState = 2;
             }
@@ -330,8 +182,7 @@ int main() {
             printf("");
         }
     }
-}
-*/
+}*/
 
 
 
@@ -345,23 +196,6 @@ int main() {
 
 
 
-
-
-
-//printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-//printf("Temp. = %.2f C\n", bmp280.temperature / 100.f);
-
-// Note this is chip temperature.
-//printf("Temp. = %f\n", (mpu6050.rawTemp / 340.0) + 36.53);
-// These are the raw numbers from the chip, so will need tweaking to be really useful.
-// See the datasheet for more information
-//printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
-//printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
-
-
-// reset to bootloader - RF24: why is this needed?
-//radio.powerDown();
-//reset_usb_boot(0, 0);
 
 
 
@@ -443,9 +277,17 @@ float rfReceive(RF24& radio, float payload){
 
 
 
+//printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+//printf("Temp. = %.2f C\n", bmp280.temperature / 100.f);
 
-void printString(char* word, int length){
-    for(int i = 0 ; i < length ; i ++ ){
-      printf("%c", word[i]);
-    }
-}
+// Note this is chip temperature.
+//printf("Temp. = %f\n", (mpu6050.rawTemp / 340.0) + 36.53);
+// These are the raw numbers from the chip, so will need tweaking to be really useful.
+// See the datasheet for more information
+//printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
+//printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
+
+
+// reset to bootloader - RF24: why is this needed?
+//radio.powerDown();
+//reset_usb_boot(0, 0);
