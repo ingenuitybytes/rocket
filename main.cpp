@@ -47,82 +47,37 @@ Modules
 #include "sd_card.h"
 #include "ff.h"
 
-void sdWrite(char* filename, char* data);
-bool rfSetup(RF24 radio, char* payload);
-char* rfReceive(RF24 radio, char* payload);
-void rfSend(RF24 radio, char* payload);
+void sdWrite(char* filename, float data);
+bool rfSetup(RF24& radio, bool radioName, float payload);
+void rfSend(RF24& radio, float payload);
+float rfReceive(RF24& radio, float payload);
 void printString(char* word, int length);
 
 
 //Transmitter
+/*
 int main() {
 
-    char payload[6] = "Hello";
-    int rip = 0;
+    float payload = 8.10;
+    bool radioNumber = 0;
+    bool success = false;
 
     stdio_init_all();
-
     RF24 radio(CE_PIN, CSN_PIN);
 
-    sleep_ms(1000);
+    sleep_ms(5000);
 
-    printf("Hi");
-    
-    /*while(!rfSetup(radio, payload)){
-        
-    }*/
-
-    while(rip){
-        uint8_t address[][6] = {"1Node", "2Node"};
-        bool radioNumber = 1; // 0 uses address[0] to transmit, 1 uses address[1] to transmit
-        while (!tud_cdc_connected()) {
-            sleep_ms(10);
-        }
-        if (!radio.begin()) {
-            printf("radio hardware is not responding!!\n");
-            rip = 1;
-        }
-        radio.setPALevel(RF24_PA_LOW); // RF24_PA_MAX is default.
-        radio.setPayloadSize(sizeof(payload)); // float datatype occupies 4 bytes
-        radio.openWritingPipe(address[radioNumber]);
-        radio.openReadingPipe(1, address[!radioNumber]); // using pipe 1
-        radio.startListening(); // put radio in RX mode
-        rip = 0;
+    while(!success){
+        success = rfSetup(radio, radioNumber, payload);
     }
-
-    printf("\nTransmitter\n");
-
-    printString(payload, 6);
-    printf("\n\n");
     
     while(true){
-        //rfSend(radio, payload);
-        // Become the TX node
-        radio.stopListening();
-
-        printf("I'm in!");
-
-        // This device is a TX node
-        uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
-        bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
-        uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
-
-
-
-        if (report) {
-                // payload was delivered; print the payload sent & the timer result
-                printf("Transmission successful! Time to transmit = %llu us. Sent: %f\n", end_timer - start_timer, payload);
-            }
-            else {
-                // payload was not delivered
-                printf("Transmission failed or timed out\n");
-            }
-            sleep_ms(1000); // slow transmissions down by 1 second
-        }
-
+        rfSend(radio, payload);
+    }
     return 0;
 
 }
+*/
 
 
 
@@ -130,34 +85,29 @@ int main() {
 
 
 //Receiver
-/*
+
 int main() {
 
-    char payload[6];
+    float payload = 0.0;
+    bool radioNumber = 1;
+    bool success = false;
 
     stdio_init_all();
-
     RF24 radio(CE_PIN, CSN_PIN);
 
-    sleep_ms(7000);
+    sleep_ms(5000);
 
-    printf("Hello");
-    
-    while(!rfSetup(radio, payload)){
-
+    while(!success){
+        success = rfSetup(radio, radioNumber, payload);
     }
 
-    printf("\nReceiver\n");
-    
     while(true){
-        rfReceive(radio, payload);
-        printString(payload, 6);
-
+        payload = rfReceive(radio, payload);
     }
 
     return 0;
 
-}*/
+}
 
 
 
@@ -431,11 +381,10 @@ void sdWrite(char* filename, char* data){
     f_unmount("0:");
 }
 
-/*
 
-bool rfSetup(RF24 radio, char* payload){
+
+bool rfSetup(RF24& radio, bool radioNumber, float payload){
     uint8_t address[][6] = {"1Node", "2Node"};
-    bool radioNumber = 1; // 0 uses address[0] to transmit, 1 uses address[1] to transmit
     while (!tud_cdc_connected()) {
         sleep_ms(10);
     }
@@ -451,34 +400,11 @@ bool rfSetup(RF24 radio, char* payload){
     return true;
 }
 
-
-char* rfReceive(RF24 radio, char* payload){
-    // Become the RX node
-    radio.startListening();
-    
-    // This device is a RX node
-
-        uint8_t pipe;
-        if (radio.available(&pipe)) {               // is there a payload? get the pipe number that recieved it
-            uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
-            radio.read(&payload, bytes);            // fetch payload from FIFO
-
-            // print the size of the payload, the pipe number, payload's value
-            printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
-        }
-    
-    return payload;
-}
-
-
-void rfSend(RF24 radio, char* payload){
+void rfSend(RF24& radio, float payload){
     // Become the TX node
     radio.stopListening();
-
-    printf("I'm in!");
         
     // This device is a TX node
-    printf("I'm in!");
     uint64_t start_timer = to_us_since_boot(get_absolute_time()); // start the timer
     bool report = radio.write(&payload, sizeof(payload));         // transmit & save the report
     uint64_t end_timer = to_us_since_boot(get_absolute_time());   // end the timer
@@ -495,7 +421,26 @@ void rfSend(RF24 radio, char* payload){
         }
         sleep_ms(1000); // slow transmissions down by 1 second
 }
-*/
+
+float rfReceive(RF24& radio, float payload){
+    // Become the RX node
+    radio.startListening();
+    
+    // This device is a RX node
+
+        uint8_t pipe;
+        if (radio.available(&pipe)) {      
+            // is there a payload? get the pipe number that recieved it
+            uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
+            radio.read(&payload, bytes);            // fetch payload from FIFO
+
+            // print the size of the payload, the pipe number, payload's value
+            printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
+        }
+    
+    return payload;
+}
+
 
 
 
