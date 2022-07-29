@@ -48,11 +48,12 @@ Modules
 #include "sd_card.h"
 #include "ff.h"
 
+
 void sdWrite(char* filename, char* data);
 bool rfSetup(RF24& radio, bool radioName, float payload);
 void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
- 
+
 
 //FC
 
@@ -65,11 +66,10 @@ int main() {
     flightStates flightState = IDLE;
     
     int sensorReadRate = 400; //Hz
-    char sensorData[100];
+    char sensorData[10];
     bool radioNumber = 1;
-    //int flightState = 0;
     char filename[] = "flightData.txt";
-    float payload;
+    float payload = 0.0;
 
     //Basic Inits
     stdio_init_all();
@@ -94,7 +94,6 @@ int main() {
     
     //Replace with switch and enum
     while(true) {
-        payload = rfReceive(radio, payload);
         switch (flightState) {
             case IDLE:
                 printf("IDLE\n");
@@ -105,14 +104,17 @@ int main() {
                 }
                 sleep_ms(100);
                 break;
+
             case TRACKING:
                 printf("TRACKING\n");
                 
                 bmp280.getData();
                 mpu6050.getData();
                 printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-                //sprintf(sensorData, "%d", bmp280.pressure);
-                //sdWrite(filename, sensorData);
+                sprintf(sensorData, "%d", bmp280.pressure);
+                printf("\n---%s---\n", sensorData);
+                sdWrite(filename, sensorData);
+                sleep_ms(100);
                 //payload = (float)bmp280.pressure;
                 //rfSend(radio, payload);
                 
@@ -122,13 +124,15 @@ int main() {
                 }
                 sleep_ms(1000);
                 break;
+
             case STOP:
                 printf("STOP\n");
 
                 payload = rfReceive(radio, payload);
-                if(payload == 0){
+                if(payload == 0) {
                     flightState = IDLE;
                 }
+
                 sleep_ms(1000);
                 break;
             default:
@@ -139,14 +143,12 @@ int main() {
 
 ////////////////////////////////////////////////////////////////
 
-
-/*
 //User
-
+/*
 int main() {
 
     int32_t sensorData;
-    //enum flightStates {IDLE, TRACKING, STOP};
+    enum flightStates {IDLE, TRACKING, STOP};
     int flightState = 0;
     char filename[] = "flightData.txt";
     char command;
@@ -165,32 +167,37 @@ int main() {
 
     sleep_ms(5000);
 
-    while(1){
+    while(true) {
         printf("Enter a number: ");
         command = getchar();
         printf("\n");
+        switch (flightState) {
+            case IDLE:
+                printf("0");
+                if(command == '1'){
+                    payload = 1.0;
+                    rfSend(radio, payload);
+                    flightState = 1;
+                }
+                break;
 
-        if(flightState == 0){
-            printf("0");
-            if(command == '1'){
-                payload = 1.0;
-                rfSend(radio, payload);
-                flightState = 1;
-            }
-        }
-        else if(flightState == 1){
-            printf("1");
-            payload = rfReceive(radio, payload);
-            //fileWrite();
-            if(command == '2'){
-                payload = 2.0;
-                rfSend(radio, payload);
-                flightState = 2;
-            }
-        }
-        else if(flightState == 2){
-            printf("2");
-            printf("");
+            case TRACKING:
+                printf("1");
+                //payload = rfReceive(radio, payload);
+                //fileWrite();
+                if(command == '2'){
+                    payload = 2.0;
+                    rfSend(radio, payload);
+                    flightState = 2;
+                }
+
+            case STOP:
+                printf("2\n");
+            if(command == '0'){
+                    payload = 0.0;
+                    rfSend(radio, payload);
+                    flightState = 0;
+                }     
         }
     }
 }*/
@@ -202,10 +209,10 @@ void sdWrite(char* filename, char* data){
     FATFS fs;
     FIL fil;
     int ret;
-    char buf[100];
+    char buf[128];
     fr = f_mount(&fs, "0:", 1);
-    fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
-    ret = f_printf(&fil, data);
+    fr = f_open(&fil, filename, FA_OPEN_APPEND | FA_WRITE);
+    ret = f_printf(&fil, data, buf);
     fr = f_close(&fil);
     f_unmount("0:");
 }
