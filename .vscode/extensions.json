@@ -1,6 +1,7 @@
 {
    "recommendations": [
        "twxs.cmake",
-       "ms-vscode.cmake-tools"
+       "ms-vscode.cmake-tools",
+       "GitHub.vscode-pull-request-github"
    ]
 }
