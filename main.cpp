@@ -64,7 +64,7 @@ float rfReceive(RF24& radio, float payload);
 
 
 //FC
-/*
+
 int main() {
     enum flightStates {
         IDLE, 
@@ -146,7 +146,7 @@ int main() {
         }
     }
 }
-*/
+
 
 ////////////////////////////////////////////////////////////////
 
