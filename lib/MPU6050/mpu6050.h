@@ -31,7 +31,6 @@
 */
 
 // By default these devices  are on bus address 0x68
-static int addr = 0x68;
 
 class MPU6050{
     public:

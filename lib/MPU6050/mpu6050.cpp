@@ -10,6 +10,8 @@
 #include "pico/binary_info.h"
 #include "mpu6050.h"
 
+static int addr = 0x68;
+
 /* Example code to talk to a MPU6050 MEMS accelerometer and gyroscope
 
    This is taking to simple approach of simply reading registers. It's perfectly

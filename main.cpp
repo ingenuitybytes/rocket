@@ -63,13 +63,6 @@ void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
 
 
-
-
-
-
-
-
-
 int main() {
     enum flightStates {
         IDLE, 

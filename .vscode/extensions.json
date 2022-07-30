@@ -3,6 +3,8 @@
     "twxs.cmake",
     "ms-vscode.cmake-tools",
     "ms-vscode.vscode-serial-monitor",
-    "GitHub.copilot"
+    "github.copilot",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack"
 ]
 }
