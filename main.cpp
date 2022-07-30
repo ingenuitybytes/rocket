@@ -64,7 +64,7 @@ float rfReceive(RF24& radio, float payload);
 
 
 //FC
-/*
+
 int main() {
     enum flightStates {
         IDLE, 
@@ -121,7 +121,7 @@ int main() {
                 //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
                 sprintf(sensorData, "Hello");
-                sdWrite(filename, "fw");
+                //sdWrite(filename, "fw");
                 sleep_ms(100);
                 payload = (float)bmp280.pressure;
                 rfSend(radio, payload);
@@ -146,7 +146,7 @@ int main() {
         }
     }
 }
-*/
+
 
 ////////////////////////////////////////////////////////////////
 
