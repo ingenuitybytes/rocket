@@ -121,7 +121,7 @@ int main() {
                 //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
                 sprintf(sensorData, "Hello");
-                //sdWrite(filename, "fw");
+                sdWrite(filename, (char*)"fw");
                 sleep_ms(100);
                 payload = (float)bmp280.pressure;
                 rfSend(radio, payload);

@@ -29,7 +29,7 @@ public:
      * @param hw_id This is either `spi0` or `spi1` (provided by the Pico SDK)
      *
      * @note this function assumes using the default SPI pins defined for your
-     * board in "pico-sdk/src/boards/include/boards/*.h" files of the Pico SDK.
+     * board in *.h" files of the Pico SDK.
      * @see begin(spi_inst_t, uint8_t, uint8_t, uint8_t) for using other pins as
      * your SPI bus.
      */
@@ -43,7 +43,7 @@ public:
      * @param _rx The pin to be used as the SPI bus' rx (MISO)
      *
      * @note this function assumes using the default SPI pins defined for your
-     * board in "pico-sdk/src/boards/include/boards/*.h" files of the Pico SDK.
+     * board in *.h" files of the Pico SDK.
      * @see The [Pico SDK has a chart of applicable pins](https://datasheets.raspberrypi.org/pico/raspberry-pi-pico-c-sdk.pdf#%5B%7B%22num%22%3A106%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C115%2C377.118%2Cnull%5D)
      * that can be used for hardware driven SPI transactions.
      */
