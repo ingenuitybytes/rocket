@@ -1,6 +1,7 @@
 {
    "recommendations": [
-       "twxs.cmake",
-       "ms-vscode.cmake-tools"
-   ]
+    "twxs.cmake",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.vscode-serial-monitor"
+]
 }
