@@ -36,14 +36,16 @@ This repository is built for the Raspberry Pi Pico.
 
 <!-- GETTING STARTED -->
 ## Getting Started
-A [Docker Package](https://github.com/Tutu-Inc/Rocket/pkgs/container/rocket) is provided via Github's Container Registry to build and upload the code to the Raspberry Pi Pico.
+A [Docker Package](https://github.com/Tutu-Inc/Rocket/pkgs/container/rocket) is provided via Github's Container Registry to build and upload the code to a Raspberry Pi Pico. 
 
 ### Prerequisites
-To use this this repository you have to install [Docker Desktop](https://www.docker.com/products/docker-desktop/) on your PC/MAC. If you are using a Raspberry Pi through SSH for uploading the code to your Raspberry Pi Pico, you have to install Docker Engine following this [guide](https://docs.docker.com/engine/install/ubuntu/)
+To use this repository you have to install [Docker Desktop](https://www.docker.com/products/docker-desktop/) on your PC/MAC. If you are using a Raspberry Pi through SSH to upload the code to your Raspberry Pi Pico, you have to install Docker Engine following this [guide].(https://docs.docker.com/engine/install/ubuntu/)
 
 ### Installation
-To install it follow the steps bellow:
+To install and setup the package follow the steps bellow:
 1. Step
+
+Use CLI or CMD to install the package. You may have to enable privilege user.
 ```bash
 docker pull ghcr.io/tutu-inc/rocket:latest
 ```
