@@ -56,7 +56,7 @@ _It could be helpful to setup [Portainer](https://docs.portainer.io/v/ce-2.9/sta
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+examples, screenshots, code examples, demos
 
 _For more examples, please refer to the [Documentation](https://github.com/Tutu-Inc/Rocket/wiki)_
 
