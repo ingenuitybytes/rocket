@@ -22,6 +22,7 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#versioning">Versioning</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -89,40 +90,35 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+_Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us._
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- VERSIONING -->
+## Versioning
+
+We use [Semantic Versioning](http://semver.org/) for versioning. For the versions
+available, see the [tags on this
+repository](https://github.com/tutu-inc/rocket/tags).
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
+
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
-<table>
-  <tbody>
-  	<tr>
-      <td align="center" valign="top" style="width:50%">
-        <a href="https://github.com/chjj">
-          <img width="40" height="40" src="https://avatars.githubusercontent.com/u/70855940?v=4">
-        </a>
-        <br>
-        <a href="https://github.com/nikplay12345">Nik</a>
-        <div>Contributor</div>
-        <small>-</small>
-      </td>
-      <td align="center" valign="top" style="width:50%">
-        <a href="https://github.com/joshbruce">
-          <img width="40" height="40" src="https://avatars.githubusercontent.com/u/70854906?v=4">
-        </a>
-        <br>
-        <a href="https://joshbruce.com">Alois Zimmermann</a>
-        <div>Contributor</div>
-        <small>-</small>
-      </td>  
-    </tr>
-  </tbody>
-</table>
+
+  - **Alois Zimmermann** - *Provided README Template* -
+    [AttractiveToad](https://github.com/AttractiveToad)
+
+See also the list of
+[contributors](https://github.com/tutu-inc/rocket/contributors)
+who participated in this project.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
