@@ -8,6 +8,8 @@
 This repository is built for the Raspberry Pi Pico.
 
 ## Package
+A Docker package is provided via Github's Container Registry to upload and build the code. To install it follow the steps bellow:
+1. Step
 ```bash
 docker pull ghcr.io/tutu-inc/rocket:latest
 ```
