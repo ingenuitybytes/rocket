@@ -49,6 +49,7 @@ Use CLI or CMD to install the package. You may have to enable privilege user.
 ```bash
 docker pull ghcr.io/tutu-inc/rocket:latest
 ```
+
 _It could be helpful to setup [Portainer](https://docs.portainer.io/v/ce-2.9/start/install/server/docker/linux), if you are not comfortable with CLI_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
