@@ -11,3 +11,7 @@ Wuuusshhhh
 ```
 --
 ```
+## Package
+```bash
+docker pull ghcr.io/tutu-inc/rocket:latest
+```
