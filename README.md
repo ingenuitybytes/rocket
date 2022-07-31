@@ -116,9 +116,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
   - **Alois Zimmermann** - *Provided README Template* -
     [AttractiveToad](https://github.com/AttractiveToad)
 
-See also the list of
+_See also the list of
 [contributors](https://github.com/tutu-inc/rocket/contributors)
-who participated in this project.
+who participated in this project_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
