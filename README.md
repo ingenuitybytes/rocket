@@ -5,12 +5,34 @@
 [![GitHub license](https://img.shields.io/github/license/tutu-inc/rocket?label=License)](https://github.com/Tutu-Inc/Rocket/blob/master/LICENSE)
 [![GitHub top language](https://img.shields.io/github/languages/top/Tutu-Inc/Rocket?color=A07&label=Top%20Language%20&logo=C%2B%2B)](https://github.com/Tutu-Inc/Rocket)
 
-Wuuusshhhh
+This repository is built for the Raspberry Pi Pico.
 
 ## Authors
-```
---
-```
+<table>
+  <tbody>
+  	<tr>
+      <td align="center" valign="top" style="width:32%">
+        <a href="https://github.com/chjj">
+          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70855940?v=4">
+        </a>
+        <br>
+        <a href="https://github.com/nikplay12345">Nik</a>
+        <div>Contributor</div>
+        <small>-</small>
+      </td>
+      <td align="center" valign="top" style="width:32%">
+        <a href="https://github.com/joshbruce">
+          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70854906?s=64&v=4">
+        </a>
+        <br>
+        <a href="https://joshbruce.com">Alois Zimmermann</a>
+        <div>Contributor</div>
+        <small>-</small>
+      </td>  
+    </tr>
+  </tbody>
+</table>
+
 ## Package
 ```bash
 docker pull ghcr.io/tutu-inc/rocket:latest
