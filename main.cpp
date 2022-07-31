@@ -120,8 +120,8 @@ int main() {
                 printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
                 //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
-                sprintf(sensorData, "Hello");
-                sdWrite(filename, (char*)"fw");
+                // sprintf(sensorData, "Hello");
+                // sdWrite(filename, (char*)"fw");
                 sleep_ms(100);
                 payload = (float)bmp280.pressure;
                 rfSend(radio, payload);
@@ -146,7 +146,6 @@ int main() {
         }
     }
 }
-
 
 ////////////////////////////////////////////////////////////////
 
@@ -230,7 +229,6 @@ void sdWrite(char* filename, char* data){
     fr = f_close(&fil);
     f_unmount("0:");
 }
-
 
 bool rfSetup(RF24& radio, bool radioNumber, float payload){
     uint8_t address[][6] = {"1Node", "2Node"};
