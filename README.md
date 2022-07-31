@@ -11,7 +11,7 @@ This repository is built for the Raspberry Pi Pico.
 <table>
   <tbody>
   	<tr>
-      <td align="center" valign="top" style="width:32%">
+      <td align="center" valign="top" style="width:50%">
         <a href="https://github.com/chjj">
           <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70855940?v=4">
         </a>
@@ -20,9 +20,9 @@ This repository is built for the Raspberry Pi Pico.
         <div>Contributor</div>
         <small>-</small>
       </td>
-      <td align="center" valign="top" style="width:32%">
+      <td align="center" valign="top" style="width:50%">
         <a href="https://github.com/joshbruce">
-          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70854906?s=64&v=4">
+          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70854906?v=4">
         </a>
         <br>
         <a href="https://joshbruce.com">Alois Zimmermann</a>
