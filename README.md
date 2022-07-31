@@ -7,13 +7,18 @@
 
 This repository is built for the Raspberry Pi Pico.
 
+## Package
+```bash
+docker pull ghcr.io/tutu-inc/rocket:latest
+```
+
 ## Authors
 <table>
   <tbody>
   	<tr>
       <td align="center" valign="top" style="width:50%">
         <a href="https://github.com/chjj">
-          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70855940?v=4">
+          <img width="40" height="40" src="https://avatars.githubusercontent.com/u/70855940?v=4">
         </a>
         <br>
         <a href="https://github.com/nikplay12345">Nik</a>
@@ -22,7 +27,7 @@ This repository is built for the Raspberry Pi Pico.
       </td>
       <td align="center" valign="top" style="width:50%">
         <a href="https://github.com/joshbruce">
-          <img width="100" height="100" src="https://avatars.githubusercontent.com/u/70854906?v=4">
+          <img width="40" height="40" src="https://avatars.githubusercontent.com/u/70854906?v=4">
         </a>
         <br>
         <a href="https://joshbruce.com">Alois Zimmermann</a>
@@ -32,8 +37,3 @@ This repository is built for the Raspberry Pi Pico.
     </tr>
   </tbody>
 </table>
-
-## Package
-```bash
-docker pull ghcr.io/tutu-inc/rocket:latest
-```
