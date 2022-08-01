@@ -64,14 +64,14 @@ float rfReceive(RF24& radio, float payload);
 
 
 //FC
-
+/*
 int main() {
     enum flightStates {
         IDLE, 
         TRACKING, 
         STOP
     };
-    flightStates flightState = TRACKING;
+    flightStates flightState = IDLE;
     
     int sensorReadRate = 400; //Hz
     char sensorData[10];
@@ -95,17 +95,17 @@ int main() {
     //Init Modules
     bmp280.init(); //include in getData Function
     //mpu6050.init(); why none needed?
-    sd_init_driver();
+    //sd_init_driver();
     while(!rfSetup(radio, radioNumber, payload)){}
 
     sleep_ms(5000);
     
     while(true) {
-        //payload = rfReceive(radio, payload);
         switch (flightState) {
             case IDLE:
                 printf("IDLE\n");
                 
+                payload = rfReceive(radio, payload);
                 if(payload == 1){
                     flightState = TRACKING;
                 }
@@ -115,19 +115,18 @@ int main() {
             case TRACKING:
                 printf("TRACKING\n");
                 
-                //bmp280.getData();
+                bmp280.getData();
                 //mpu6050.getData();
                 printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
                 //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
-                // sprintf(sensorData, "Hello");
-                // sdWrite(filename, (char*)"fw");
-                
+                //sdWrite(filename, (char*)"fw");
                 
                 sleep_ms(100);
                 payload = (float)bmp280.pressure;
                 rfSend(radio, payload);
                 
+                payload = rfReceive(radio, payload);
                 if(payload == 2) {
                     flightState = STOP;
                 }
@@ -137,6 +136,7 @@ int main() {
             case STOP:
                 printf("STOP\n");
 
+                payload = rfReceive(radio, payload);
                 if(payload == 0) {
                     flightState = IDLE;
                 }
@@ -148,16 +148,16 @@ int main() {
         }
     }
 }
-
+*/
 ////////////////////////////////////////////////////////////////
 
 //User
-/*
+
 int main() {
 
     int32_t sensorData;
     enum flightStates {IDLE, TRACKING, STOP};
-    flightStates flightState = TRACKING;
+    flightStates flightState = IDLE;
     char filename[] = "flightData.txt";
     char command = '3';
     float payload = 0.0;
@@ -177,8 +177,9 @@ int main() {
 
     while(true) {
         printf("Enter a number: ");
-        //command = getchar();
+        command = getchar();
         printf("\n");
+
         switch (flightState) {
             case IDLE:
                 printf("0");
@@ -216,7 +217,7 @@ int main() {
         }
     }
 }
-*/
+
 
 //Change to bool later on, to check if writing to file was successful
 void sdWrite(char* filename, char* data){
