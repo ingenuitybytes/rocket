@@ -64,7 +64,7 @@ float rfReceive(RF24& radio, float payload);
 
 
 //FC
-/*
+
 int main() {
     enum flightStates {
         IDLE, 
@@ -148,75 +148,8 @@ int main() {
         }
     }
 }
-*/
+
 ////////////////////////////////////////////////////////////////
-
-//User
-
-int main() {
-
-    int32_t sensorData;
-    enum flightStates {IDLE, TRACKING, STOP};
-    flightStates flightState = IDLE;
-    char filename[] = "flightData.txt";
-    char command = '3';
-    float payload = 0.0;
-    bool radioNumber = 0;
-
-    //Basic Inits
-    stdio_init_all();
-    i2cInit();
-
-    //Create Module Instances
-    RF24 radio(CE_PIN, CSN_PIN);
-    
-    //Init Modules
-    while(!rfSetup(radio, radioNumber, payload)){}
-
-    sleep_ms(5000);
-
-    while(true) {
-        printf("Enter a number: ");
-        command = getchar();
-        printf("\n");
-
-        switch (flightState) {
-            case IDLE:
-                printf("0");
-                if(command == '1'){
-                    payload = 1.0;
-                    rfSend(radio, payload);
-                    flightState = TRACKING;
-                }
-                break;
-                sleep_ms(100);
-
-            case TRACKING:
-                printf("1");
-                payload = 0.0;
-
-                while(payload == 0.0){
-                    payload = rfReceive(radio, payload);
-                }
-                //fileWrite();
-                if(command == '2'){
-                    payload = 2.0;
-                    rfSend(radio, payload);
-                    flightState = STOP;
-                }
-                sleep_ms(1000);
-
-            case STOP:
-                printf("2\n");
-                if(command == '0'){
-                    payload = 0.0;
-                    rfSend(radio, payload);
-                    flightState = IDLE;
-                }   
-                sleep_ms(1000);  
-        }
-    }
-}
 
 
 //Change to bool later on, to check if writing to file was successful
