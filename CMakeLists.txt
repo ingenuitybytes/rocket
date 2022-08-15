@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 # Pull in SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(main C CXX ASM)
+project(rocket C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -25,12 +25,14 @@ add_compile_options(-Wall
         -Wno-maybe-uninitialized
         )
 
-add_executable(main
-    main.cpp
+        
+add_executable(gc
+    gc.cpp
 )
 
 # pull in common dependencies
-target_link_libraries(main pico_stdlib
+target_link_libraries(gc
+    pico_stdlib
     hardware_pwm
     hardware_spi
     hardware_i2c
@@ -41,8 +43,31 @@ target_link_libraries(main pico_stdlib
     )
 
 # enable usb output, disable uart output
-pico_enable_stdio_usb(main 1)
-pico_enable_stdio_uart(main 0)
+pico_enable_stdio_usb(gc 1)
+pico_enable_stdio_uart(gc 0)
 
 # create map/bin/hex/uf2 file etc.
-pico_add_extra_outputs(main)
+pico_add_extra_outputs(gc)
+
+add_executable(fc
+    fc.cpp
+)
+
+# pull in common dependencies
+target_link_libraries(fc
+    pico_stdlib
+    hardware_pwm
+    hardware_spi
+    hardware_i2c
+    BMP280
+    MPU6050
+    FatFs_SPI
+    RF24
+    )
+
+# enable usb output, disable uart output
+pico_enable_stdio_usb(fc 1)
+pico_enable_stdio_uart(fc 0)
+
+# create map/bin/hex/uf2 file etc.
+pico_add_extra_outputs(fc)
