@@ -84,7 +84,7 @@ _For more examples, please refer to the [Documentation](https://github.com/Tutu-
 - [ ] Communication between user and GC
 - [ ] Program interface
 
-See the [open issues](https://github.com/Tutu-Inc/Rocket/issues) for a full list of proposed features (and known issues).
+_See the [open issues](https://github.com/Tutu-Inc/Rocket/issues) for a full list of proposed features (and known issues)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
