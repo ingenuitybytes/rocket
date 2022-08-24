@@ -65,15 +65,26 @@ _For more examples, please refer to the [Documentation](https://github.com/Tutu-
 
 <!-- ROADMAP -->
 ## Roadmap
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
 
-See the [open issues](https://github.com/Tutu-Inc/Rocket/issues) for a full list of proposed features (and known issues).
+### Rocket
+- [ ] Basic module communication
+- [ ] Schematic of FC
+- [ ] Processing sensor data
+- [ ] Testflight with FC and peripherals
+- [ ] Processing sensor data (Setup Kalmanfilter)
+- [ ] Design rocket
+    - [ ] Ejection mech
+    - [ ] TVC mech
+- [ ] Simulate rocket trajectory
+
+### Ground station
+- [ ] Design launch pad
+    - [ ] Clamps
+    - [ ] Pad
+- [ ] Communication between user and GC
+- [ ] Program interface
+
+_See the [open issues](https://github.com/Tutu-Inc/Rocket/issues) for a full list of proposed features (and known issues)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -90,7 +101,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-_Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us._
+_Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
