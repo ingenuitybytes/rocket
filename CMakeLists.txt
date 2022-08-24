@@ -33,6 +33,7 @@ add_executable(gc
 # pull in common dependencies
 target_link_libraries(gc
     pico_stdlib
+    pico_multicore
     hardware_pwm
     hardware_spi
     hardware_i2c
@@ -56,6 +57,7 @@ add_executable(fc
 # pull in common dependencies
 target_link_libraries(fc
     pico_stdlib
+    pico_multicore
     hardware_pwm
     hardware_spi
     hardware_i2c
