@@ -71,7 +71,7 @@ int main() {
         TRACKING, 
         STOP
     };
-    flightStates flightState = IDLE;
+    flightStates flightState = TRACKING;
     
     int sensorReadRate = 400; //Hz
     char sensorData[10];
@@ -86,17 +86,18 @@ int main() {
     //Create Module Instances
     BMP280 bmp280;
     MPU6050 mpu6050;
-    RF24 radio(CE_PIN, CSN_PIN);
+    
+    // RF24 radio(CE_PIN, CSN_PIN);
 
     //Reset Modules
-    //bmp280.reset(); needed?
+
     mpu6050.reset();
     
     //Init Modules
     bmp280.init(); //include in getData Function
-    //mpu6050.init(); why none needed?
-    //sd_init_driver();
-    while(!rfSetup(radio, radioNumber, payload)){}
+    
+    sd_init_driver();
+    // while(!rfSetup(radio, radioNumber, payload)){}
 
     sleep_ms(5000);
     
@@ -105,7 +106,7 @@ int main() {
             case IDLE:
                 printf("IDLE\n");
                 
-                payload = rfReceive(radio, payload);
+                // payload = rfReceive(radio, payload);
                 if(payload == 1){
                     flightState = TRACKING;
                 }
@@ -116,27 +117,31 @@ int main() {
                 printf("TRACKING\n");
                 
                 bmp280.getData();
-                //mpu6050.getData();
-                //printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-                //sprintf(sensorData, "%d", bmp280.pressure);
-                //printf("\n---%s---\n", sensorData);
-                //sdWrite(filename, (char*)"fw");
+                mpu6050.getData();
+                printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+                printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
+                printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
+                
+                sprintf(sensorData, "%d", bmp280.pressure);
+                
+                sdWrite(filename, (char*)"fw");
                 
                 sleep_ms(100);
-                payload = (float)bmp280.pressure;
-                rfSend(radio, payload);
                 
-                payload = rfReceive(radio, payload);
+                payload = (float)bmp280.pressure;
+                // rfSend(radio, payload);
+                
+                // payload = rfReceive(radio, payload);
                 if(payload == 2) {
                     flightState = STOP;
                 }
-                sleep_ms(1000);
+                sleep_ms(100);
                 break;
 
             case STOP:
                 printf("STOP\n");
 
-                payload = rfReceive(radio, payload);
+                // payload = rfReceive(radio, payload);
                 if(payload == 0) {
                     flightState = IDLE;
                 }
