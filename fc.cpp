@@ -117,7 +117,7 @@ int main() {
                 
                 bmp280.getData();
                 //mpu6050.getData();
-                printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
+                //printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
                 //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
                 //sdWrite(filename, (char*)"fw");

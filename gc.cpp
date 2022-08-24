@@ -55,16 +55,19 @@ Modules
 #include "defaultPins.h"  // board presumptive default pin numbers for CE_PIN and CSN_PIN
 #include "sd_card.h"
 #include "ff.h"
+#include "pico/multicore.h"
+#include <cstdlib>          // need this include, if you need heap management (malloc, realloc, free)
 
 
+//void core1_entry();
 void sdWrite(char* filename, char* data);
 bool rfSetup(RF24& radio, bool radioName, float payload);
 void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
+//static char * getLine(bool fullDuplex = true, char lineBreak = '\n');
 
 
 //GC
-
 int main() {
 
     int32_t sensorData;
@@ -74,6 +77,9 @@ int main() {
     char command = '3';
     float payload = 0.0;
     bool radioNumber = 0;
+
+    //Use Dual Core
+    //multicore_launch_core1(core1_entry);
 
     //Basic Inits
     stdio_init_all();
@@ -89,7 +95,7 @@ int main() {
 
     while(true) {
         printf("Enter a number: ");
-        command = getchar();
+        command = getchar();//multicore_fifo_pop_blocking();
         printf("\n");
 
         switch (flightState) {
@@ -105,11 +111,13 @@ int main() {
 
             case TRACKING:
                 printf("1");
-                payload = 0.0;
 
-                while(payload == 0.0){
+                for(int i=0; i<10; i++){
                     payload = rfReceive(radio, payload);
+                    printf("%f", payload);
+                    sleep_ms(1200);
                 }
+
                 //fileWrite();
                 if(command == '2'){
                     payload = 2.0;
@@ -129,6 +137,18 @@ int main() {
         }
     }
 }
+
+
+/*
+void core1_entry() {
+    while(true){
+        char *pLine = getLine(true, '\r');
+        std::string instruction = pLine;
+        multicore_fifo_push_blocking(pLine);
+        free(pLine); // dont forget freeing buffer !!
+    }
+}*/
+
 
 
 //Change to bool later on, to check if writing to file was successful
@@ -191,8 +211,9 @@ float rfReceive(RF24& radio, float payload){
     // This device is a RX node
 
         uint8_t pipe;
-        if (radio.available(&pipe)) {      
-            // is there a payload? get the pipe number that recieved it
+        if (radio.available(&pipe)) {  
+            printf("\nPayload available!\n");    
+            // is there a payload? get the pipe number that received it
             uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
             radio.read(&payload, bytes);            // fetch payload from FIFO
 
@@ -201,12 +222,63 @@ float rfReceive(RF24& radio, float payload){
 
             return payload;
         }
-        else{
+        else{  
             return 0.0;
         }
     
 }
 
+
+/*
+static char * getLine(bool fullDuplex, char lineBreak) {
+    const uint startLineLength = 8; // the linebuffer will automatically grow for longer lines
+    const char eof = 255;           // EOF in stdio.h -is -1, but getchar returns int 255 to avoid blocking
+
+    // th line buffer
+    // will allocated by pico_malloc module if <cstdlib> gets included
+    char * pStart = (char*)malloc(startLineLength); 
+    char * pPos = pStart;  // next character position
+    size_t maxLen = startLineLength; // current max buffer size
+    size_t len = maxLen; // current max length
+    int c;
+
+    if(!pStart) {
+        return NULL; // out of memory or dysfunctional heap
+    }
+
+    while(1) {
+        c = getchar(); // expect next character entry
+        if(c == eof || c == lineBreak) {
+            break;     // non blocking exit
+        }
+
+        if (fullDuplex) {
+            putchar(c); // echo for fullDuplex terminals
+        }
+
+        if(--len == 0) { // allow larger buffer
+            len = maxLen;
+            // double the current line buffer size
+            char *pNew  = (char*)realloc(pStart, maxLen *= 2);
+            if(!pNew) {
+                free(pStart);
+                return NULL; // out of memory abort
+            }
+            // fix pointer for new buffer
+            pPos = pNew + (pPos - pStart);
+            pStart = pNew;
+        }
+
+        // stop reading if lineBreak character entered 
+        if((*pPos++ = c) == lineBreak) {
+            break;
+        }
+    }
+
+    *pPos = '\0';   // set string end mark
+    return pStart;
+}
+*/
 
 
 //printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
