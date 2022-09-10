@@ -1,6 +1,5 @@
 /*
 Code Debugging Problems:
-User Cant RF Send&Receive --> getchar() blocking rf communication
 FC stuck when writing to SD Card --> rfSetup is a problem when mounting sd card (probably because SPI Pin mismatch or misconfiguration)
 */
 
@@ -55,13 +54,31 @@ Modules
 #include "defaultPins.h"  // board presumptive default pin numbers for CE_PIN and CSN_PIN
 #include "sd_card.h"
 #include "ff.h"
-
+#include "pico/multicore.h"
+#include <cstdlib>          // need this include, if you need heap management (malloc, realloc, free)
+#include "hardware/gpio.h"
+#include "hardware/adc.h"
 
 void sdWrite(char* filename, char* data);
 bool rfSetup(RF24& radio, bool radioName, float payload);
 void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
+void core1_entry();
 
+static void sd_spi_deselect() {
+    gpio_put(17, 1);
+    LED_OFF();
+    /*
+    MMC/SDC enables/disables the DO output in synchronising to the SCLK. This
+    means there is a posibility of bus conflict with MMC/SDC and another SPI
+    slave that shares an SPI bus. Therefore to make MMC/SDC release the MISO
+    line, the master device needs to send a byte after the CS signal is
+    deasserted.
+    */
+    uint8_t fill = SPI_FILL_CHAR;
+    #define 	spi0   ((spi_inst_t *)spi0_hw)
+    spi_write_blocking(spi0, &fill, 1);
+}
 
 //FC
 
@@ -86,18 +103,22 @@ int main() {
     //Create Module Instances
     BMP280 bmp280;
     MPU6050 mpu6050;
-    
-    // RF24 radio(CE_PIN, CSN_PIN);
+    RF24 radio(CE_PIN, CSN_PIN);
 
     //Reset Modules
-
     mpu6050.reset();
     
     //Init Modules
     bmp280.init(); //include in getData Function
-    
+
+    while(!rfSetup(radio, radioNumber, payload)){}
     sd_init_driver();
-    // while(!rfSetup(radio, radioNumber, payload)){}
+    
+    //Use Dual Core
+    adc_init();
+    adc_gpio_init(26);
+    adc_select_input(0);
+    multicore_launch_core1(core1_entry);
 
     sleep_ms(5000);
     
@@ -105,8 +126,7 @@ int main() {
         switch (flightState) {
             case IDLE:
                 printf("IDLE\n");
-                
-                // payload = rfReceive(radio, payload);
+                payload = rfReceive(radio, payload);
                 if(payload == 1){
                     flightState = TRACKING;
                 }
@@ -114,34 +134,29 @@ int main() {
                 break;
 
             case TRACKING:
-                printf("TRACKING\n");
+                //printf("TRACKING\n");
                 
                 bmp280.getData();
                 mpu6050.getData();
-                printf("Pressure = %.3f kPa\n", bmp280.pressure / 1000.f);
-                printf("Gyro. X = %d, Y = %d, Z = %d\n", mpu6050.rawGyro[0], mpu6050.rawGyro[1], mpu6050.rawGyro[2]);
-                printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
-                
+                //printf("Pressure = %.3f kPa\n", 26.687);//bmp280.pressure / 1000.f);
+                //printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
                 sprintf(sensorData, "%d", bmp280.pressure);
-                
+                //printf("\n---%s---\n", sensorData);
                 sdWrite(filename, (char*)"fw");
-                
-                sleep_ms(100);
-                
+                //sleep_ms(1000);
                 payload = (float)bmp280.pressure;
-                // rfSend(radio, payload);
+                rfSend(radio, payload);
                 
-                // payload = rfReceive(radio, payload);
+                payload = rfReceive(radio, payload);
                 if(payload == 2) {
                     flightState = STOP;
                 }
-                sleep_ms(100);
+                //sleep_ms(1000);
                 break;
 
             case STOP:
                 printf("STOP\n");
-
-                // payload = rfReceive(radio, payload);
+                payload = rfReceive(radio, payload);
                 if(payload == 0) {
                     flightState = IDLE;
                 }
@@ -155,6 +170,15 @@ int main() {
 }
 
 ////////////////////////////////////////////////////////////////
+
+
+void core1_entry() {
+    while(true){
+        const float conversion_factor = 3.3f / (1 << 12);
+        uint16_t result = adc_read();
+        printf("%f\n", result, result * conversion_factor);
+    }
+}
 
 
 //Change to bool later on, to check if writing to file was successful
@@ -201,11 +225,11 @@ void rfSend(RF24& radio, float payload){
 
     if (report) {
             // payload was delivered; print the payload sent & the timer result
-            printf("Transmission successful! Time to transmit = %llu us. Sent: %f\n", end_timer - start_timer, payload);
+            //printf("Transmission successful! Time to transmit = %llu us. Sent: %f\n", end_timer - start_timer, payload);
         }
         else {
             // payload was not delivered
-            printf("Transmission failed or timed out\n");
+            //printf("Transmission failed or timed out\n");
         }
         sleep_ms(1000); // slow transmissions down by 1 second
 }
@@ -223,7 +247,7 @@ float rfReceive(RF24& radio, float payload){
             radio.read(&payload, bytes);            // fetch payload from FIFO
 
             // print the size of the payload, the pipe number, payload's value
-            printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
+            //printf("Received %d bytes on pipe %d: %f\n", bytes, pipe, payload);
 
             return payload;
         }
