@@ -71,7 +71,7 @@ static sd_card_t sd_cards[] = {  // One for each SD card
         .m_Status = STA_NOINIT
     }
 };
-
+ 
 void spi0_dma_isr() { spi_irq_handler(&spis[0]); }
 
 /* ********************************************************************** */
