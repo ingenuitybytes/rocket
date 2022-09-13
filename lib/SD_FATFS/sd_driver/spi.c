@@ -137,7 +137,7 @@ bool my_spi_init(spi_t *pSPI) {
 
         /* Configure component */
         // Enable SPI at 100 kHz and connect to GPIOs
-        spi_init(pSPI->hw_inst, 100 * 1000);
+        spi_init(pSPI->hw_inst, 400 * 1000);
         spi_set_format(pSPI->hw_inst, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
 
         gpio_set_function(pSPI->miso_gpio, GPIO_FUNC_SPI);

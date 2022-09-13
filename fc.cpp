@@ -1,6 +1,6 @@
 /*
 Code Debugging Problems:
-FC stuck when writing to SD Card --> rfSetup is a problem when mounting sd card (probably because SPI Pin mismatch or misconfiguration)
+Conflicting SPI Setups - alternative: use both SPI busses
 */
 
 
@@ -65,21 +65,6 @@ void rfSend(RF24& radio, float payload);
 float rfReceive(RF24& radio, float payload);
 void core1_entry();
 
-static void sd_spi_deselect() {
-    gpio_put(17, 1);
-    LED_OFF();
-    /*
-    MMC/SDC enables/disables the DO output in synchronising to the SCLK. This
-    means there is a posibility of bus conflict with MMC/SDC and another SPI
-    slave that shares an SPI bus. Therefore to make MMC/SDC release the MISO
-    line, the master device needs to send a byte after the CS signal is
-    deasserted.
-    */
-    uint8_t fill = SPI_FILL_CHAR;
-    #define 	spi0   ((spi_inst_t *)spi0_hw)
-    spi_write_blocking(spi0, &fill, 1);
-}
-
 //FC
 
 int main() {
@@ -103,7 +88,7 @@ int main() {
     //Create Module Instances
     BMP280 bmp280;
     MPU6050 mpu6050;
-    RF24 radio(CE_PIN, CSN_PIN);
+    RF24 radio(CE_PIN, CSN_PIN, 400 * 1000);
 
     //Reset Modules
     mpu6050.reset();
@@ -111,8 +96,8 @@ int main() {
     //Init Modules
     bmp280.init(); //include in getData Function
 
-    while(!rfSetup(radio, radioNumber, payload)){}
     sd_init_driver();
+    while(!rfSetup(radio, radioNumber, payload)){}
     
     //Use Dual Core
     adc_init();
@@ -140,18 +125,18 @@ int main() {
                 mpu6050.getData();
                 //printf("Pressure = %.3f kPa\n", 26.687);//bmp280.pressure / 1000.f);
                 //printf("Acc. X = %d, Y = %d, Z = %d\n", mpu6050.rawAccel[0], mpu6050.rawAccel[1], mpu6050.rawAccel[2]);
-                sprintf(sensorData, "%d", bmp280.pressure);
+                //sprintf(sensorData, "%d", bmp280.pressure);
                 //printf("\n---%s---\n", sensorData);
-                sdWrite(filename, (char*)"fw");
-                //sleep_ms(1000);
+                sdWrite(filename, (char*)"Hi\n");
+                sleep_ms(1000);
                 payload = (float)bmp280.pressure;
-                rfSend(radio, payload);
+                //rfSend(radio, payload);
                 
-                payload = rfReceive(radio, payload);
+                //payload = rfReceive(radio, payload);
                 if(payload == 2) {
                     flightState = STOP;
                 }
-                //sleep_ms(1000);
+                sleep_ms(1000);
                 break;
 
             case STOP:
