@@ -1,4 +1,4 @@
-{
+[{
     // These settings tweaks to the cmake plugin will ensure
     // that you debug using cortex-debug instead of trying to launch
     // a Pico binary on the host
@@ -18,4 +18,4 @@
     },
     "cmake.buildBeforeRun": true,
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
-}
+}]
